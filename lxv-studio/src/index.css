@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-black: #0A0A0A;
+  --color-dark: #161616;
+  --color-neon-pink: #ff007f;
+  --color-neon-purple: #b026ff;
+  --color-soft-magenta: #e066ff;
+  --color-electric-blue: #00e5ff;
+
+  --font-sans: "Geist", "Inter", sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: #0A0A0A;
+    --foreground: #ffffff;
+    --card: #161616;
+    --card-foreground: #ffffff;
+    --border: rgba(255, 255, 255, 0.1);
+    --primary: #ff007f;
+    --primary-foreground: #ffffff;
+    --secondary: #b026ff;
+    --secondary-foreground: #ffffff;
+    --muted: #1a1a1a;
+    --muted-foreground: #a1a1aa;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #222222;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff007f;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500;
+  }
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+  }
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(255, 0, 127, 0.5), 0 0 40px rgba(176, 38, 255, 0.3);
+  }
+  .neon-border {
+    border: 1px solid rgba(255, 0, 127, 0.5);
+    box-shadow: inset 0 0 10px rgba(255, 0, 127, 0.2);
+  }
+}
