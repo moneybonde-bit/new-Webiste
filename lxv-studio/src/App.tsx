@@ -3,40 +3,62 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
 import { TargetClients } from "./sections/TargetClients";
-import { Portfolio } from "./sections/Portfolio";
-import { Workflow } from "./sections/Workflow";
-import { Pricing } from "./sections/Pricing";
-import { FAQ } from "./sections/FAQ";
-import { Contact } from "./sections/Contact";
-import { Footer } from "./components/Footer";
-import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
+
+const Portfolio = lazy(() =>
+  import("./sections/Portfolio").then((m) => ({ default: m.Portfolio })),
+);
+const Workflow = lazy(() =>
+  import("./sections/Workflow").then((m) => ({ default: m.Workflow })),
+);
+const Pricing = lazy(() =>
+  import("./sections/Pricing").then((m) => ({ default: m.Pricing })),
+);
+const FAQ = lazy(() =>
+  import("./sections/FAQ").then((m) => ({ default: m.FAQ })),
+);
+const Contact = lazy(() =>
+  import("./sections/Contact").then((m) => ({ default: m.Contact })),
+);
+const Footer = lazy(() =>
+  import("./components/Footer").then((m) => ({ default: m.Footer })),
+);
+const FloatingWhatsApp = lazy(() =>
+  import("./components/FloatingWhatsApp").then((m) => ({
+    default: m.FloatingWhatsApp,
+  })),
+);
+
+const SectionFallback = () => <div className="min-h-[40vh]" />;
 
 export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-neon-pink/30 selection:text-white">
       <Navbar />
-      
+
       <main>
         <Hero />
         <About />
         <WhyChooseUs />
         <TargetClients />
-        <Portfolio />
-        <Workflow />
-        <Pricing />
-        <FAQ />
-        <Contact />
+        <Suspense fallback={<SectionFallback />}>
+          <Portfolio />
+          <Workflow />
+          <Pricing />
+          <FAQ />
+          <Contact />
+        </Suspense>
       </main>
 
-      <Footer />
-      <FloatingWhatsApp />
+      <Suspense fallback={null}>
+        <Footer />
+        <FloatingWhatsApp />
+      </Suspense>
     </div>
   );
 }
-
