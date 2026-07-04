@@ -13,6 +13,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: t("nav.about"), to: "about" },
+    { name: t("nav.services"), to: "services" },
     { name: t("nav.portfolio"), to: "portfolio" },
     { name: t("nav.faq"), to: "faq" },
   ];

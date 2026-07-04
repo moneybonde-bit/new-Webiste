@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Check, Info, MessageCircle, Star } from "lucide-react";
+import { Check, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../components/ui/Button";
 
@@ -57,10 +57,10 @@ export function Pricing() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1, type: "spring", stiffness: 100 }}
               whileHover={{ y: -5, scale: 1.02 }}
-              className={`relative flex flex-col p-8 rounded-[24px] border ${pkg.badge.includes('Populer') ? 'border-transparent' : 'border-white/10 glass-card'} transition-all duration-300 group`}
+              className={`relative flex flex-col p-8 rounded-[24px] border ${pkg.badge.includes('⭐') ? 'border-transparent' : 'border-white/10 glass-card'} transition-all duration-300 group`}
             >
               {/* Highlight Card Special Background & Border */}
-              {pkg.badge.includes('Populer') && (
+              {pkg.badge.includes('⭐') && (
                 <>
                   <div className="absolute inset-0 rounded-[24px] bg-[#111] z-0" />
                   <div className="absolute inset-[-1px] rounded-[24px] bg-gradient-to-b from-neon-pink to-neon-purple opacity-50 z-[-1]" />
@@ -69,10 +69,10 @@ export function Pricing() {
               )}
 
               {/* Card Glow Effect on Hover */}
-              <div className={`absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 ${pkg.badge.includes('Populer') ? 'from-neon-pink/20' : ''}`} />
+              <div className={`absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 ${pkg.badge.includes('⭐') ? 'from-neon-pink/20' : ''}`} />
               
               {pkg.badge && (
-                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap z-10 ${pkg.badge.includes('Populer') ? 'bg-gradient-to-r from-neon-pink to-neon-purple text-white shadow-[0_0_20px_rgba(255,0,127,0.4)]' : 'bg-[#222] border border-white/10 text-gray-300'}`}>
+                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap z-10 ${pkg.badge.includes('⭐') ? 'bg-gradient-to-r from-neon-pink to-neon-purple text-white shadow-[0_0_20px_rgba(255,0,127,0.4)]' : 'bg-[#222] border border-white/10 text-gray-300'}`}>
                   {pkg.badge}
                 </div>
               )}
@@ -94,7 +94,7 @@ export function Pricing() {
                 <ul className="space-y-4">
                   {pkg.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-gray-300">
-                      <Check className={`w-5 h-5 shrink-0 mt-0.5 ${pkg.badge.includes('Populer') ? 'text-neon-pink' : 'text-gray-500'}`} />
+                      <Check className={`w-5 h-5 shrink-0 mt-0.5 ${pkg.badge.includes('⭐') ? 'text-neon-pink' : 'text-gray-500'}`} />
                       <span className="leading-tight">{feature}</span>
                     </li>
                   ))}
@@ -103,8 +103,8 @@ export function Pricing() {
 
               <div className="mt-auto relative z-10 pt-4">
                 <Button 
-                  variant={pkg.badge.includes('Populer') ? "primary" : "outline"} 
-                  className={`w-full py-6 rounded-xl ${pkg.badge.includes('Populer') ? 'shadow-[0_0_30px_rgba(255,0,127,0.3)] hover:shadow-[0_0_40px_rgba(255,0,127,0.5)]' : 'hover:bg-white/5'}`}
+                  variant={pkg.badge.includes('⭐') ? "primary" : "outline"} 
+                  className={`w-full py-6 rounded-xl ${pkg.badge.includes('⭐') ? 'shadow-[0_0_30px_rgba(255,0,127,0.3)] hover:shadow-[0_0_40px_rgba(255,0,127,0.5)]' : 'hover:bg-white/5'}`}
                 >
                   {pkg.cta}
                 </Button>

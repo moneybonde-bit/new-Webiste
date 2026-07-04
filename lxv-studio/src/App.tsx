@@ -10,6 +10,9 @@ import { About } from "./sections/About";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
 import { TargetClients } from "./sections/TargetClients";
 
+const Services = lazy(() =>
+  import("./sections/Services").then((m) => ({ default: m.Services })),
+);
 const Portfolio = lazy(() =>
   import("./sections/Portfolio").then((m) => ({ default: m.Portfolio })),
 );
@@ -47,6 +50,7 @@ export default function App() {
         <WhyChooseUs />
         <TargetClients />
         <Suspense fallback={<SectionFallback />}>
+          <Services />
           <Portfolio />
           <Workflow />
           <Pricing />

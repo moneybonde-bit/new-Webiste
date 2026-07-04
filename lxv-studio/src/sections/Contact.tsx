@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "../components/ui/Button";
 import { useTranslation } from "react-i18next";
+import { whatsappLink } from "../config/site";
 
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -33,11 +34,9 @@ export function Contact() {
     
     // Construct the WhatsApp message
     const message = `Halo Luxavian Studio,\n\nNama: ${data.name}\nEmail: ${data.email}\nWhatsApp: ${data.whatsapp}\nPerusahaan: ${data.company || '-'}\nJenis Proyek: ${data.projectType}\nAnggaran: ${data.budget}\n\nDetail:\n${data.description}`;
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Open WhatsApp in a new tab (085236074563 -> 6285236074563)
-    const whatsappUrl = `https://wa.me/6285236074563?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
+
+    // Open WhatsApp in a new tab with the prefilled message
+    window.open(whatsappLink(message), '_blank');
     
     setIsSubmitting(false);
     reset();
