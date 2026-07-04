@@ -11,16 +11,16 @@ export function Portfolio() {
   const localize = useLocalized();
 
   return (
-    <section id="portfolio" className="py-24 relative bg-dark/30">
+    <section id="portfolio" className="py-24 relative bg-dark/30" aria-labelledby="portfolio-heading">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">{t("portfolio.title")}</h2>
+          <h2 id="portfolio-heading" className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">{t("portfolio.title")}</h2>
           <p className="text-gray-400 text-lg">{t("portfolio.desc")}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {portfolioProjects.map((project, index) => (
-            <motion.article
+            <motion.li
               key={index}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -33,10 +33,13 @@ export function Portfolio() {
                   src={project.image}
                   alt={localize(project.title)}
                   loading="lazy"
+                  decoding="async"
+                  width={400}
+                  height={300}
                   className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-3 left-3 text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-neon-purple">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" aria-hidden="true" />
+                <span className="absolute bottom-3 left-3 text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full bg-black/60 border border-white/10 text-neon-purple">
                   {localize(project.category)}
                 </span>
               </TiltCard>
@@ -54,6 +57,7 @@ export function Portfolio() {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`${t("portfolio.visit")} — ${localize(project.title)}`}
                     className="inline-flex items-center gap-2 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:bg-neon-pink hover:border-neon-pink transition-colors"
                   >
                     <ExternalLink size={14} aria-hidden="true" />
@@ -65,7 +69,7 @@ export function Portfolio() {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`${localize(project.title)} — GitHub`}
+                    aria-label={`${localize(project.title)} — GitHub repository`}
                     className="inline-flex items-center gap-2 text-sm font-medium text-gray-300 bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:bg-white/10 hover:text-white transition-colors"
                   >
                     <Github size={14} aria-hidden="true" />
@@ -73,9 +77,9 @@ export function Portfolio() {
                   </a>
                 )}
               </div>
-            </motion.article>
+            </motion.li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

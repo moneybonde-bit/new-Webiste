@@ -11,14 +11,14 @@ export function Workflow() {
   const steps = t("workflow.steps", { returnObjects: true }) as { title: string; desc: string }[];
 
   return (
-    <section className="py-24 relative bg-dark/20 border-y border-white/5">
+    <section className="py-24 relative bg-dark/20 border-y border-white/5" aria-labelledby="workflow-heading">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 max-w-3xl mx-auto flex flex-col items-center">
-          <TextReveal text={t("workflow.title")} className="text-3xl md:text-5xl font-bold mb-4 tracking-tight" />
+          <TextReveal text={t("workflow.title")} id="workflow-heading" className="text-3xl md:text-5xl font-bold mb-4 tracking-tight" />
           <p className="text-gray-400">{t("workflow.desc")}</p>
         </div>
 
-        <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative">
+        <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative" aria-label={t("workflow.title")}>
           {/* Connector line (desktop) */}
           <div
             aria-hidden="true"
@@ -36,13 +36,13 @@ export function Workflow() {
                 transition={{ duration: 0.5, delay: index * 0.12 }}
                 className="relative flex flex-col items-center text-center p-6 glass-card hover:border-neon-pink/40 transition-colors duration-300 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple p-[1px] mb-5 relative z-10 group-hover:shadow-[0_0_25px_-5px_#ff007f] transition-shadow">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple p-[1px] mb-5 relative z-10 group-hover:shadow-[0_0_25px_-5px_#ff007f] transition-shadow" aria-hidden="true">
                   <div className="w-full h-full bg-[#111] rounded-2xl flex items-center justify-center">
-                    <Icon size={24} className="text-white" aria-hidden="true" />
+                    <Icon size={24} className="text-white" />
                   </div>
                 </div>
 
-                <span className="text-xs font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-2">
+                <span aria-hidden="true" className="text-xs font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-2">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="text-lg font-bold text-white mb-3">{step.title}</h3>

@@ -6,9 +6,7 @@
 import React, { lazy, Suspense } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./sections/Hero";
-import { About } from "./sections/About";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
-import { TargetClients } from "./sections/TargetClients";
 
 const Services = lazy(() =>
   import("./sections/Services").then((m) => ({ default: m.Services })),
@@ -37,18 +35,16 @@ const FloatingWhatsApp = lazy(() =>
   })),
 );
 
-const SectionFallback = () => <div className="min-h-[40vh]" />;
+const SectionFallback = () => <div className="min-h-[40vh]" aria-hidden="true" />;
 
 export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-neon-pink/30 selection:text-white">
       <Navbar />
 
-      <main>
+      <main id="main-content">
         <Hero />
-        <About />
         <WhyChooseUs />
-        <TargetClients />
         <Suspense fallback={<SectionFallback />}>
           <Services />
           <Portfolio />
