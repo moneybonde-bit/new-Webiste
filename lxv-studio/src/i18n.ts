@@ -42,10 +42,7 @@ const resources = {
       },
       clients: {
         title: "Who We Help",
-        desc: "We are ready to work with various sectors to deliver the right solutions.",
-        items: [
-          "SMEs", "Local Businesses", "Schools", "Universities", "Churches", "Foundations", "Social Orgs", "Local Gov", "Non-Profits", "Private Cos"
-        ]
+        desc: "We are ready to work with various sectors to deliver the right solutions."
       },
       pricing: {
         title: "Pricing Packages",
@@ -146,21 +143,24 @@ const resources = {
           a4: "No problem. Our team is ready to discuss and provide the best recommendations before the project begins."
         }
       },
+      services: {
+        title: "Our Services",
+        desc: "Premium digital solutions tailored to your goals."
+      },
       portfolio: {
         title: "Our Work",
-        desc: "Various digital solutions we have developed for our clients.",
-        p1: { title: "Business & Digital Invitations", cat: "Business Websites" },
-        p2: { title: "Data Monitoring Systems", cat: "Dashboard Websites" },
-        p3: { title: "Organization Information Platform", cat: "Foundation & Church" }
+        desc: "Real projects we have crafted for our clients.",
+        visit: "Visit Website"
       },
       workflow: {
         title: "How We Work",
         desc: "A transparent and collaborative process from start to finish.",
         steps: [
-          { title: "Consultation & Discovery", desc: "We listen and understand your unique needs." },
-          { title: "Strategy & Design", desc: "Designing solutions and modern interfaces." },
-          { title: "Development & Testing", desc: "Building the product with modern, scalable technology." },
-          { title: "Launch & Support", desc: "Deploying the product and providing ongoing support." }
+          { title: "Consultation", desc: "We discuss your goals, business needs, and project requirements." },
+          { title: "Planning & Design", desc: "We prepare the structure, UI/UX, and visual concept." },
+          { title: "Development", desc: "We build a fast, responsive, and optimized website." },
+          { title: "Review", desc: "You review the project and request revisions if needed." },
+          { title: "Launch", desc: "We deploy your website and ensure everything works properly." }
         ]
       },
       faq: {
@@ -216,7 +216,15 @@ const resources = {
       },
       footer: {
         desc: "From Central Sulawesi, Building Digital Solutions for Indonesia.",
-        rights: "All rights reserved."
+        columns: { company: "Company", services: "Services", contact: "Contact" },
+        links: {
+          about: "About Us",
+          portfolio: "Portfolio",
+          services: "Services",
+          businessWebsite: "Business Website",
+          weddingInvitation: "Wedding Invitation",
+          customWebApp: "Custom Web App"
+        }
       }
     }
   },
@@ -259,10 +267,7 @@ const resources = {
       },
       clients: {
         title: "Target Klien",
-        desc: "Kami siap bekerja sama dengan berbagai sektor untuk menghadirkan solusi yang tepat guna.",
-        items: [
-          "UMKM", "Bisnis Lokal", "Sekolah", "Perguruan Tinggi", "Gereja", "Yayasan", "Organisasi Sosial", "Pemerintah Daerah", "Lembaga Non-Profit", "Perusahaan Swasta"
-        ]
+        desc: "Kami siap bekerja sama dengan berbagai sektor untuk menghadirkan solusi yang tepat guna."
       },
       pricing: {
         title: "Pilihan Layanan",
@@ -363,21 +368,24 @@ const resources = {
           a4: "Tidak masalah. Tim kami siap berdiskusi dan memberikan rekomendasi terbaik sebelum proyek dimulai."
         }
       },
+      services: {
+        title: "Layanan Kami",
+        desc: "Solusi digital premium yang disesuaikan dengan tujuan Anda."
+      },
       portfolio: {
         title: "Portofolio",
-        desc: "Berbagai solusi digital yang telah kami kembangkan untuk klien kami.",
-        p1: { title: "Bisnis & Undangan Digital", cat: "Bisnis Website" },
-        p2: { title: "Website Dashboard", cat: "Sistem & Dashboard" },
-        p3: { title: "Website Yayasan atau Gereja", cat: "Yayasan & Gereja" }
+        desc: "Proyek nyata yang telah kami kerjakan untuk klien kami.",
+        visit: "Kunjungi Website"
       },
       workflow: {
         title: "Cara Kami Bekerja",
         desc: "Proses yang transparan dan kolaboratif dari awal hingga akhir.",
         steps: [
-          { title: "Konsultasi & Penemuan", desc: "Kami mendengarkan dan memahami kebutuhan unik Anda." },
-          { title: "Strategi & Desain", desc: "Merancang solusi dan antarmuka yang modern." },
-          { title: "Pengembangan & Pengujian", desc: "Membangun produk dengan teknologi modern." },
-          { title: "Peluncuran & Dukungan", desc: "Penerapan produk dan dukungan berkelanjutan." }
+          { title: "Konsultasi", desc: "Kami mendiskusikan tujuan, kebutuhan bisnis, dan kebutuhan proyek Anda." },
+          { title: "Perencanaan & Desain", desc: "Kami menyiapkan struktur, UI/UX, dan konsep visual." },
+          { title: "Pengembangan", desc: "Kami membangun website yang cepat, responsif, dan teroptimasi." },
+          { title: "Peninjauan", desc: "Anda meninjau proyek dan meminta revisi jika diperlukan." },
+          { title: "Peluncuran", desc: "Kami merilis website Anda dan memastikan semuanya berjalan baik." }
         ]
       },
       faq: {
@@ -433,7 +441,15 @@ const resources = {
       },
       footer: {
         desc: "Dari Sulawesi Tengah, Membangun Solusi Digital untuk Indonesia.",
-        rights: "Seluruh hak cipta dilindungi."
+        columns: { company: "Perusahaan", services: "Layanan", contact: "Kontak" },
+        links: {
+          about: "Tentang Kami",
+          portfolio: "Portofolio",
+          services: "Layanan",
+          businessWebsite: "Website Bisnis",
+          weddingInvitation: "Undangan Pernikahan",
+          customWebApp: "Aplikasi Web Kustom"
+        }
       }
     }
   },
@@ -476,10 +492,7 @@ const resources = {
       },
       clients: {
         title: "我们帮助谁",
-        desc: "我们准备与各个部门合作，提供正确的解决方案。",
-        items: [
-          "中小企业", "本地企业", "学校", "大学", "教堂", "基金会", "社会组织", "地方政府", "非营利组织", "私营公司"
-        ]
+        desc: "我们准备与各个部门合作，提供正确的解决方案。"
       },
       pricing: {
         title: "服务套餐",
@@ -580,21 +593,24 @@ const resources = {
           a4: "没关系。在项目开始之前，我们的团队随时准备进行讨论并提供最佳建议。"
         }
       },
+      services: {
+        title: "我们的服务",
+        desc: "根据您的目标量身定制的高端数字解决方案。"
+      },
       portfolio: {
         title: "我们的作品",
-        desc: "我们为客户开发的各种数字解决方案。",
-        p1: { title: "商业与数字邀请", cat: "商业网站" },
-        p2: { title: "数据监控系统", cat: "仪表板网站" },
-        p3: { title: "组织信息平台", cat: "基金会与教堂" }
+        desc: "我们为客户打造的真实项目。",
+        visit: "访问网站"
       },
       workflow: {
         title: "我们的工作方式",
         desc: "从头到尾的透明协作过程。",
         steps: [
-          { title: "咨询与发现", desc: "我们倾听并了解您的独特需求。" },
-          { title: "战略与设计", desc: "设计解决方案和现代界面。" },
-          { title: "开发与测试", desc: "使用现代、可扩展的技术构建产品。" },
-          { title: "启动与支持", desc: "部署产品并提供持续支持。" }
+          { title: "咨询", desc: "我们讨论您的目标、业务需求和项目要求。" },
+          { title: "规划与设计", desc: "我们准备网站结构、UI/UX 和视觉概念。" },
+          { title: "开发", desc: "我们构建快速、响应式且经过优化的网站。" },
+          { title: "审阅", desc: "您审阅项目，并在需要时提出修改意见。" },
+          { title: "上线", desc: "我们部署您的网站并确保一切正常运行。" }
         ]
       },
       faq: {
@@ -650,7 +666,15 @@ const resources = {
       },
       footer: {
         desc: "来自中苏拉威西，为印度尼西亚构建数字解决方案。",
-        rights: "版权所有。"
+        columns: { company: "公司", services: "服务", contact: "联系" },
+        links: {
+          about: "关于我们",
+          portfolio: "作品集",
+          services: "服务",
+          businessWebsite: "企业网站",
+          weddingInvitation: "婚礼请柬",
+          customWebApp: "定制网络应用"
+        }
       }
     }
   }

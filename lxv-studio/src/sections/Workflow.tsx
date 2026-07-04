@@ -1,33 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "motion/react";
+import React from "react";
+import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import { Target, Lightbulb, PenTool, Code2, TestTube2, Rocket, Settings } from "lucide-react";
+import { MessagesSquare, PenTool, Code2, SearchCheck, Rocket } from "lucide-react";
 import { TextReveal } from "../components/ui/TextReveal";
+
+const stepIcons = [MessagesSquare, PenTool, Code2, SearchCheck, Rocket];
 
 export function Workflow() {
   const { t } = useTranslation();
   const steps = t("workflow.steps", { returnObjects: true }) as { title: string; desc: string }[];
-  
-  const icons = [Target, Lightbulb, PenTool, Code2, TestTube2, Rocket, Settings];
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeStep, setActiveStep] = useState(0);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"]
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const totalSteps = steps.length;
-    // Calculate the active step based on scroll progress (0 to 1)
-    let current = Math.floor(latest * totalSteps);
-    if (current >= totalSteps) current = totalSteps - 1;
-    if (current < 0) current = 0;
-    setActiveStep(current);
-  });
-
-  const ActiveIcon = icons[activeStep % icons.length];
 
   return (
     <section className="py-24 relative bg-dark/20 border-y border-white/5">
@@ -37,58 +18,39 @@ export function Workflow() {
           <p className="text-gray-400">{t("workflow.desc")}</p>
         </div>
 
-        <div className="flex flex-col md:flex-row relative items-start gap-12" ref={containerRef}>
-          {/* Left Side: Scrolling text content */}
-          <div className="w-full md:w-1/2 flex flex-col pt-[10vh] pb-[30vh]">
-            {steps.map((step, index) => (
-              <div 
+        <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative">
+          {/* Connector line (desktop) */}
+          <div
+            aria-hidden="true"
+            className="hidden lg:block absolute top-[52px] left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-neon-pink/40 via-neon-purple/40 to-neon-pink/40"
+          />
+
+          {steps.map((step, index) => {
+            const Icon = stepIcons[index % stepIcons.length];
+            return (
+              <motion.li
                 key={index}
-                className={`py-[20vh] transition-opacity duration-500 ${index === activeStep ? 'opacity-100' : 'opacity-30'}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
+                className="relative flex flex-col items-center text-center p-6 glass-card hover:border-neon-pink/40 transition-colors duration-300 group"
               >
-                <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-neon-pink to-neon-purple opacity-30 mb-4">
-                  0{index + 1}
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">{step.title}</h3>
-                <p className="text-lg text-gray-400 leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Right Side: Sticky Visual Container */}
-          <div className="w-full md:w-1/2 sticky top-[20vh] h-[60vh] hidden md:flex items-center justify-center">
-            <div className="w-full max-w-md aspect-square rounded-3xl glass-card border border-white/10 relative overflow-hidden flex items-center justify-center shadow-2xl">
-              {/* Animated Background Blob */}
-              <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/10 to-neon-purple/10" />
-              <motion.div 
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 90, 0]
-                }}
-                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                className="absolute w-full h-full bg-neon-purple/20 blur-[100px] rounded-full mix-blend-screen"
-              />
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeStep}
-                  initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                  exit={{ opacity: 0, scale: 1.2, rotate: 10 }}
-                  transition={{ duration: 0.5, type: "spring", stiffness: 200, damping: 20 }}
-                  className="relative z-10 flex flex-col items-center justify-center p-8 text-center"
-                >
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple p-[1px] mb-6 shadow-[0_0_40px_-10px_#ff007f]">
-                    <div className="w-full h-full bg-[#111] rounded-2xl flex items-center justify-center">
-                      <ActiveIcon size={40} className="text-white" />
-                    </div>
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple p-[1px] mb-5 relative z-10 group-hover:shadow-[0_0_25px_-5px_#ff007f] transition-shadow">
+                  <div className="w-full h-full bg-[#111] rounded-2xl flex items-center justify-center">
+                    <Icon size={24} className="text-white" aria-hidden="true" />
                   </div>
-                  <h4 className="text-xl font-bold text-white mb-2">{steps[activeStep].title}</h4>
-                  <p className="text-sm text-gray-400">Step 0{activeStep + 1} of {steps.length}</p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
+                </div>
+
+                <span className="text-xs font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-purple mb-2">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-lg font-bold text-white mb-3">{step.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">{step.desc}</p>
+              </motion.li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

@@ -1,17 +1,12 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Building2, GraduationCap, HeartHandshake, Users, Landmark, Briefcase, Store, Activity, BookOpen, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { clientSegments } from "../data/targetClients";
+import { useLocalized } from "../lib/localize";
 
 export function TargetClients() {
   const { t } = useTranslation();
-  const clients = t("clients.items", { returnObjects: true }) as string[];
-  
-  const icons = [
-    <Store />, <Briefcase />, <BookOpen />, <GraduationCap />, 
-    <HeartHandshake />, <Users />, <Activity />, <Landmark />, 
-    <Globe />, <Building2 />
-  ];
+  const localize = useLocalized();
 
   return (
     <section className="py-24 relative border-y border-white/5">
@@ -21,21 +16,39 @@ export function TargetClients() {
           <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">{t("clients.title")}</h2>
           <p className="text-gray-400 text-lg">{t("clients.desc")}</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {clients.map((client, i) => (
-             <motion.div key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="flex flex-col items-center justify-center text-center gap-3 p-6 glass-card group hover:border-neon-purple/50 transition-colors h-full"
-            >
-              <div className="text-neon-purple opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
-                {icons[i % icons.length]}
-              </div>
-              <span className="text-sm font-medium text-gray-300">{client}</span>
-            </motion.div>
-          ))}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {clientSegments.map((segment, i) => {
+            const Icon = segment.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="p-8 glass-card group hover:border-neon-purple/50 transition-colors duration-300"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-11 h-11 rounded-xl bg-neon-purple/10 border border-neon-purple/30 flex items-center justify-center text-neon-purple group-hover:scale-110 transition-transform">
+                    <Icon size={20} aria-hidden="true" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">{localize(segment.title)}</h3>
+                </div>
+
+                <ul className="flex flex-wrap gap-2">
+                  {segment.items.map((item, j) => (
+                    <li
+                      key={j}
+                      className="text-xs font-medium text-gray-300 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 group-hover:border-white/20 transition-colors"
+                    >
+                      {localize(item)}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
