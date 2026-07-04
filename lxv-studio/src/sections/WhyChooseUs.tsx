@@ -9,7 +9,7 @@ export function WhyChooseUs() {
 
   return (
     <section id="why" className="py-24 relative overflow-hidden" aria-labelledby="why-heading">
-      <div className="glow-blob absolute top-1/2 right-0 w-[400px] h-[400px] bg-neon-purple/10 blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2" aria-hidden="true" />
+      <div className="glow-blob hidden md:block absolute top-1/2 right-0 w-[400px] h-[400px] bg-neon-purple/10 blur-[100px] -z-10 translate-x-1/2 -translate-y-1/2" aria-hidden="true" />
 
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
