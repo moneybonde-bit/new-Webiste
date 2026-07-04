@@ -1,4 +1,4 @@
-/* Fonts are loaded via <link> in index.html (with preconnect) — no CSS @import needed. */
+/* Fonts are preloaded via <link rel="preload"> in index.html with display=swap. */
 @import "tailwindcss";
 
 @theme {
@@ -26,47 +26,78 @@
     --muted: #1a1a1a;
     --muted-foreground: #a1a1aa;
   }
-  
+
   html {
     scroll-behavior: smooth;
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
-  }
-
-  body {
+    /* Hint browser to use GPU compositing for the whole page */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
+  /* Skip link: off-screen by default, visible on focus for keyboard users */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
-  ::-webkit-scrollbar-track {
-    background: #0A0A0A;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #222222;
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: auto;
+    height: auto;
+    padding: 0.75rem 1.5rem;
     background: #ff007f;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 9999px;
+    text-decoration: none;
+    outline: 2px solid #fff;
   }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0A0A; }
+  ::-webkit-scrollbar-thumb { background: #222222; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #ff007f; }
 }
 
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500;
   }
+
+  /*
+   * GPU-friendly card: avoid backdrop-filter on low-end devices.
+   * We keep bg-white/5 + border for the glass look without the expensive
+   * backdrop-filter blur that triggers layer promotion storms on mobile.
+   */
   .glass-card {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+    @apply bg-white/5 border border-white/10 rounded-2xl;
+    /* Promote to its own GPU layer once, so hover transitions are cheap */
+    will-change: border-color;
   }
+
   .neon-glow {
     box-shadow: 0 0 20px rgba(255, 0, 127, 0.5), 0 0 40px rgba(176, 38, 255, 0.3);
   }
   .neon-border {
     border: 1px solid rgba(255, 0, 127, 0.5);
     box-shadow: inset 0 0 10px rgba(255, 0, 127, 0.2);
+  }
+
+  /* Decorative glow blobs — use transform for GPU compositing instead of blur animations */
+  .glow-blob {
+    border-radius: 50%;
+    will-change: transform;
+    transform: translateZ(0);
   }
 }

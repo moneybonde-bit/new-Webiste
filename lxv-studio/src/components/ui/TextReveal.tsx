@@ -5,9 +5,10 @@ import { cn } from "@/src/lib/utils";
 interface TextRevealProps {
   text: string;
   className?: string;
+  id?: string;
 }
 
-export function TextReveal({ text, className }: TextRevealProps) {
+export function TextReveal({ text, className, id }: TextRevealProps) {
   const words = text.split(" ");
 
   const container = {
@@ -23,26 +24,19 @@ export function TextReveal({ text, className }: TextRevealProps) {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 100,
-      },
+      transition: { type: "spring", damping: 12, stiffness: 100 },
     },
     hidden: {
       opacity: 0,
       y: 20,
       filter: "blur(10px)",
-      transition: {
-        type: "spring",
-        damping: 12,
-        stiffness: 100,
-      },
+      transition: { type: "spring", damping: 12, stiffness: 100 },
     },
   };
 
   return (
-    <motion.div
+    <motion.h2
+      id={id}
       style={{ overflow: "hidden", display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       variants={container}
       initial="hidden"
@@ -59,6 +53,6 @@ export function TextReveal({ text, className }: TextRevealProps) {
           {word}
         </motion.span>
       ))}
-    </motion.div>
+    </motion.h2>
   );
 }

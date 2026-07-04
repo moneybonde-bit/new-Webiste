@@ -8,10 +8,10 @@ import { useTranslation } from "react-i18next";
 export function Hero() {
   const { t } = useTranslation();
   const ref = useRef(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
 
   const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
@@ -20,18 +20,19 @@ export function Hero() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <section ref={ref} id="home" className="relative h-[150vh]">
+    <section ref={ref} id="home" className="relative h-[150vh]" aria-labelledby="hero-heading">
       <div className="sticky top-0 h-screen w-full flex items-center justify-center pt-20 overflow-hidden">
-        {/* Background gradients */}
-        <motion.div 
+        {/* Background gradients — transform-only animation keeps it on GPU */}
+        <motion.div
           style={{ scale: backgroundScale, opacity: backgroundOpacity }}
           className="absolute inset-0 w-full h-full bg-background -z-10 origin-center"
+          aria-hidden="true"
         >
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neon-pink/20 rounded-full blur-[120px] mix-blend-screen" />
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/20 rounded-full blur-[120px] mix-blend-screen" />
+          <div className="glow-blob absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neon-pink/20 blur-[120px]" />
+          <div className="glow-blob absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/20 blur-[120px]" />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           style={{ y: textY, opacity: textOpacity }}
           className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center"
         >
@@ -39,13 +40,14 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-8"
           >
-            <Sparkles className="w-4 h-4 text-neon-pink" />
+            <Sparkles className="w-4 h-4 text-neon-pink" aria-hidden="true" />
             <span className="text-sm font-medium text-gray-300">{t("hero.subtitle")}</span>
           </motion.div>
 
           <motion.h1
+            id="hero-heading"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -71,7 +73,7 @@ export function Hero() {
           >
             <Link to="contact" smooth={true} duration={500} offset={-80}>
               <Button size="lg" className="w-full sm:w-auto gap-2">
-                {t("hero.cta1")} <ArrowRight className="w-4 h-4" />
+                {t("hero.cta1")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Button>
             </Link>
             <Link to="contact" smooth={true} duration={500} offset={-80}>
