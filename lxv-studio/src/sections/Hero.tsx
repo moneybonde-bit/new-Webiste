@@ -28,8 +28,8 @@ export function Hero() {
           className="absolute inset-0 w-full h-full bg-background -z-10 origin-center"
           aria-hidden="true"
         >
-          <div className="glow-blob absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neon-pink/20 blur-[120px]" />
-          <div className="glow-blob absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/20 blur-[120px]" />
+          <div className="glow-blob hidden md:block absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-neon-pink/20 blur-[120px]" aria-hidden="true" />
+          <div className="glow-blob hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/20 blur-[120px]" aria-hidden="true" />
         </motion.div>
 
         <motion.div

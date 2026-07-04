@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./sections/Hero";
 import { WhyChooseUs } from "./sections/WhyChooseUs";
+import { LazySection } from "./components/LazySection";
 
 const Services = lazy(() =>
   import("./sections/Services").then((m) => ({ default: m.Services })),
@@ -35,8 +36,6 @@ const FloatingWhatsApp = lazy(() =>
   })),
 );
 
-const SectionFallback = () => <div className="min-h-[40vh]" aria-hidden="true" />;
-
 export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-neon-pink/30 selection:text-white">
@@ -45,20 +44,16 @@ export default function App() {
       <main id="main-content">
         <Hero />
         <WhyChooseUs />
-        <Suspense fallback={<SectionFallback />}>
-          <Services />
-          <Portfolio />
-          <Workflow />
-          <Pricing />
-          <FAQ />
-          <Contact />
-        </Suspense>
+        <LazySection><Services /></LazySection>
+        <LazySection><Portfolio /></LazySection>
+        <LazySection><Workflow /></LazySection>
+        <LazySection><Pricing /></LazySection>
+        <LazySection><FAQ /></LazySection>
+        <LazySection><Contact /></LazySection>
       </main>
 
-      <Suspense fallback={null}>
-        <Footer />
-        <FloatingWhatsApp />
-      </Suspense>
+      <LazySection><Footer /></LazySection>
+      <LazySection><FloatingWhatsApp /></LazySection>
     </div>
   );
 }

@@ -33,13 +33,21 @@
     <!-- Preload logo (above-the-fold in nav — improves LCP) -->
     <link rel="preload" href="/logos/luxavian-logo-48.webp" as="image" type="image/webp" />
 
-    <!-- Fonts: preconnect + display=swap to avoid FOIT -->
+    <!-- Fonts: preconnect + async load to avoid render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
 
     <!-- Theme color -->
     <meta name="theme-color" content="#0A0A0A" />
