@@ -7,7 +7,7 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { AuthProvider } from "./portal/auth/AuthContext";
-import { RequireAdmin, RequireAuth } from "./portal/auth/guards";
+import { RequireAdmin, RequireAuth, RequireSuperAdmin } from "./portal/auth/guards";
 
 const ConsultationPage = lazy(() =>
   import("./pages/ConsultationPage").then((m) => ({ default: m.ConsultationPage })),
@@ -41,6 +41,9 @@ const ProjectDetailPage = lazy(() =>
   import("./portal/pages/admin/ProjectDetailPage").then((m) => ({
     default: m.ProjectDetailPage,
   })),
+);
+const TeamPage = lazy(() =>
+  import("./portal/pages/admin/TeamPage").then((m) => ({ default: m.TeamPage })),
 );
 
 export default function App() {
@@ -112,6 +115,14 @@ export default function App() {
                   <RequireAdmin>
                     <ProjectDetailPage />
                   </RequireAdmin>
+                }
+              />
+              <Route
+                path="/admin/team"
+                element={
+                  <RequireSuperAdmin>
+                    <TeamPage />
+                  </RequireSuperAdmin>
                 }
               />
             </Routes>

@@ -7,8 +7,10 @@ import type {
   Meeting,
   Note,
   NotificationItem,
+  Profile,
   Project,
   ProjectStatus,
+  UserRole,
 } from "../domain/types";
 
 export interface SubmitConsultationInput {
@@ -47,6 +49,12 @@ export interface PortalRepository {
   getAllProjects(): Promise<Project[]>;
   getProject(id: string): Promise<Project | null>;
   updateProjectStatus(id: string, status: ProjectStatus, actorName: string): Promise<Project>;
+  /** Super-admin only (enforced by RLS). */
+  deleteProject(id: string): Promise<void>;
+
+  // Team & roles (super-admin only, enforced by RLS + DB trigger)
+  listTeam(): Promise<Profile[]>;
+  setUserRole(userId: string, role: UserRole): Promise<void>;
 
   // Files
   listFiles(projectId: string): Promise<FileAsset[]>;

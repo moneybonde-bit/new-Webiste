@@ -7,8 +7,12 @@ import React, {
   useState,
 } from "react";
 import { isDemoMode, getSupabase } from "../data/supabaseClient";
-import { DEMO_SESSION_KEY } from "../data/demoRepository";
-import type { UserRole } from "../domain/types";
+import {
+  DEMO_SESSION_KEY,
+  demoGrantInitialAdmin,
+  demoRoleFor,
+} from "../data/demoRepository";
+import { ADMIN_ROLES, type UserRole } from "../domain/types";
 
 export interface PortalUser {
   id: string;
@@ -19,6 +23,9 @@ export interface PortalUser {
 interface AuthContextValue {
   user: PortalUser | null;
   loading: boolean;
+  /** Any staff role (admin or super_admin). */
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
   /** Sends a magic link (Supabase) or signs straight in (demo mode). */
   signInWithMagicLink: (email: string, redirectPath?: string) => Promise<{ demo: boolean }>;
   signOut: () => Promise<void>;
@@ -26,10 +33,9 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const DEMO_ADMIN_KEY = "lxv.portal.demo.admin";
-
 async function fetchRole(userId: string): Promise<UserRole> {
-  const { data } = await getSupabase()
+  const supabase = await getSupabase();
+  const { data } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", userId)
@@ -37,23 +43,22 @@ async function fetchRole(userId: string): Promise<UserRole> {
   return (data?.role as UserRole | undefined) ?? "client";
 }
 
+/** Demo sessions resolve synchronously from localStorage, so hydrate at mount. */
+function initialDemoUser(): PortalUser | null {
+  if (!isDemoMode) return null;
+  const email = localStorage.getItem(DEMO_SESSION_KEY);
+  return email ? { id: email, email, role: demoRoleFor(email) } : null;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<PortalUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<PortalUser | null>(initialDemoUser);
+  const [loading, setLoading] = useState(!isDemoMode);
 
   useEffect(() => {
-    if (isDemoMode) {
-      const email = localStorage.getItem(DEMO_SESSION_KEY);
-      if (email) {
-        const isAdmin = localStorage.getItem(DEMO_ADMIN_KEY) === email;
-        setUser({ id: email, email, role: isAdmin ? "admin" : "client" });
-      }
-      setLoading(false);
-      return;
-    }
+    if (isDemoMode) return;
 
-    const supabase = getSupabase();
     let cancelled = false;
+    let unsubscribe: (() => void) | null = null;
 
     const apply = async (sessionUser: { id: string; email?: string } | null) => {
       if (!sessionUser?.email) {
@@ -66,19 +71,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    supabase.auth.getSession().then(({ data }) => {
-      void apply(data.session?.user ?? null).finally(() => {
+    void getSupabase()
+      .then((supabase) => {
+        void supabase.auth.getSession().then(({ data }) => {
+          void apply(data.session?.user ?? null).finally(() => {
+            if (!cancelled) setLoading(false);
+          });
+        });
+        const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+          void apply(session?.user ?? null);
+        });
+        unsubscribe = () => sub.subscription.unsubscribe();
+      })
+      .catch(() => {
         if (!cancelled) setLoading(false);
       });
-    });
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      void apply(session?.user ?? null);
-    });
 
     return () => {
       cancelled = true;
-      sub.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, []);
 
@@ -87,14 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const normalized = email.trim().toLowerCase();
       if (isDemoMode) {
         localStorage.setItem(DEMO_SESSION_KEY, normalized);
-        if (redirectPath.startsWith("/admin")) {
-          localStorage.setItem(DEMO_ADMIN_KEY, normalized);
-        }
-        const isAdmin = localStorage.getItem(DEMO_ADMIN_KEY) === normalized;
-        setUser({ id: normalized, email: normalized, role: isAdmin ? "admin" : "client" });
+        if (redirectPath.startsWith("/admin")) demoGrantInitialAdmin(normalized);
+        setUser({ id: normalized, email: normalized, role: demoRoleFor(normalized) });
         return { demo: true };
       }
-      const { error } = await getSupabase().auth.signInWithOtp({
+      const supabase = await getSupabase();
+      const { error } = await supabase.auth.signInWithOtp({
         email: normalized,
         options: { emailRedirectTo: `${window.location.origin}${redirectPath}` },
       });
@@ -108,13 +117,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isDemoMode) {
       localStorage.removeItem(DEMO_SESSION_KEY);
     } else {
-      await getSupabase().auth.signOut();
+      const supabase = await getSupabase();
+      await supabase.auth.signOut();
     }
     setUser(null);
   }, []);
 
   const value = useMemo(
-    () => ({ user, loading, signInWithMagicLink, signOut }),
+    () => ({
+      user,
+      loading,
+      isAdmin: user !== null && ADMIN_ROLES.includes(user.role),
+      isSuperAdmin: user?.role === "super_admin",
+      signInWithMagicLink,
+      signOut,
+    }),
     [user, loading, signInWithMagicLink, signOut],
   );
 

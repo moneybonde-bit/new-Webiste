@@ -106,7 +106,6 @@ export function Pricing() {
                 <div className="grid grid-cols-1 gap-6 pt-6 lg:grid-cols-[1fr_340px]">
                   <div className="rounded-[24px] border border-white/10 bg-white/[0.02] p-6 sm:p-8">
                     <PackageDetails
-                      pkg={selectedPkg}
                       detail={selectedDetail}
                       resolve={resolve}
                       labels={detailLabels}

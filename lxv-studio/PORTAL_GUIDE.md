@@ -17,6 +17,7 @@ pipeline**.
 | `/admin/pipeline` | admin | Drag-and-drop kanban (Lead → … → Maintenance) |
 | `/admin/leads` · `/admin/clients` · `/admin/projects` | admin | Searchable lists |
 | `/admin/projects/:id` | admin | Project detail: status updates, internal notes, files, meeting scheduler, activity |
+| `/admin/team` | super admin | Role management (Client / Admin / Super Admin) |
 
 ## Architecture
 
@@ -51,25 +52,21 @@ mode. Any email that first signs in at `/admin/login` becomes the demo admin.
 
 ## Going live with Supabase
 
-1. Create a project at [supabase.com](https://supabase.com), then run
-   `supabase/schema.sql` in the SQL editor. It creates all tables, RLS
-   policies, the `project-files` storage bucket, and the
-   `submit_consultation` RPC that generates project codes.
-2. Copy `.env.example` → `.env` and fill in `VITE_SUPABASE_URL` and
-   `VITE_SUPABASE_ANON_KEY` (Settings → API).
-3. In Supabase **Auth → URL Configuration**, set your site URL and add
-   `https://<your-domain>/portal` and `/admin` as redirect URLs. Magic links
-   ("Email OTP") are enabled by default.
-4. Promote your staff after their first sign-in:
-   ```sql
-   update public.profiles set role = 'admin' where email = 'you@luxavian.id';
-   ```
-5. (Optional, for status-change emails) deploy the edge function:
-   ```bash
-   supabase functions deploy notify-status-change
-   supabase secrets set RESEND_API_KEY=re_xxx NOTIFY_FROM="Luxavian <hello@luxavian.id>" PORTAL_URL=https://luxavian.it.com/portal
-   ```
-   Dashboard notifications work without it.
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the full step-by-step production
+checklist (Supabase project, SQL, auth, redirect URLs, Cloudflare env vars,
+first super admin, and a verification run-through).
+
+## Roles (RBAC)
+
+| Role | Access |
+| --- | --- |
+| `client` | Own projects only (`/portal`) |
+| `admin` | Full CRM (`/admin/*` except Team) |
+| `super_admin` | CRM + `/admin/team` role management + project deletion |
+
+Role changes are enforced in the database (RLS + a trigger that blocks role
+edits by non-super-admins), not just in the UI. Bootstrap the first super
+admin via SQL; manage everyone else from `/admin/team`.
 
 ## Security model
 

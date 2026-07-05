@@ -14,14 +14,26 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-/** Admin-only routes. Non-admin users land back on their own dashboard. */
+/** Staff-only routes (admin or super_admin). Clients land back on their dashboard. */
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const location = useLocation();
   if (loading) return <FullPageSpinner />;
   if (!user) {
     return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
   }
-  if (user.role !== "admin") return <Navigate to="/portal" replace />;
+  if (!isAdmin) return <Navigate to="/portal" replace />;
+  return <>{children}</>;
+}
+
+/** Super-admin-only routes (team management, destructive actions). */
+export function RequireSuperAdmin({ children }: { children: React.ReactNode }) {
+  const { user, loading, isSuperAdmin } = useAuth();
+  const location = useLocation();
+  if (loading) return <FullPageSpinner />;
+  if (!user) {
+    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+  }
+  if (!isSuperAdmin) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 }
