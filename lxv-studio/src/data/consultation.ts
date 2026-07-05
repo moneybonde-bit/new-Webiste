@@ -220,6 +220,17 @@ export const consultationCopy = {
   cta: {
     sendWhatsApp: { en: "Send via WhatsApp", id: "Kirim via WhatsApp", zh: "通过 WhatsApp 发送" },
     schedule: { en: "Schedule a Meeting", id: "Jadwalkan Pertemuan", zh: "预约会议" },
+    createWorkspace: {
+      en: "Create my project workspace",
+      id: "Buat ruang kerja proyek saya",
+      zh: "创建我的项目空间",
+    },
+    creating: { en: "Creating your project…", id: "Membuat proyek Anda…", zh: "正在创建您的项目…" },
+    workspaceHint: {
+      en: "We'll open your personal dashboard where you can track progress, share files, and talk to us.",
+      id: "Kami akan membuka dasbor pribadi Anda untuk memantau progres, berbagi file, dan berdiskusi dengan kami.",
+      zh: "我们将为您开启专属仪表板，随时跟踪进度、共享文件并与我们沟通。",
+    },
     meetingTitle: {
       en: "How would you like to meet?",
       id: "Bagaimana Anda ingin bertemu?",
@@ -228,10 +239,34 @@ export const consultationCopy = {
   },
   validation: {
     nameRequired: { en: "Please enter your name", id: "Mohon isi nama Anda", zh: "请输入您的姓名" },
+    emailRequired: {
+      en: "Please enter a valid email — it's how you'll access your project dashboard",
+      id: "Mohon isi email yang valid — email ini untuk mengakses dasbor proyek Anda",
+      zh: "请输入有效的电子邮箱——用于访问您的项目仪表板",
+    },
     contactRequired: {
       en: "Please provide a phone or WhatsApp number",
       id: "Mohon isi nomor telepon atau WhatsApp",
       zh: "请提供电话或 WhatsApp 号码",
     },
+    submitFailed: {
+      en: "Something went wrong while creating your project. Please try again.",
+      id: "Terjadi kesalahan saat membuat proyek Anda. Silakan coba lagi.",
+      zh: "创建项目时出现问题，请重试。",
+    },
+  },
+  success: {
+    eyebrow: { en: "Project created", id: "Proyek dibuat", zh: "项目已创建" },
+    title: {
+      en: "Your project workspace is ready",
+      id: "Ruang kerja proyek Anda siap",
+      zh: "您的项目空间已准备就绪",
+    },
+    magicLink: {
+      en: "We've emailed you a secure sign-in link. Open it to access your project dashboard — no password needed.",
+      id: "Kami telah mengirim tautan masuk aman ke email Anda. Buka untuk mengakses dasbor proyek Anda — tanpa kata sandi.",
+      zh: "我们已向您的邮箱发送了安全登录链接。打开即可访问项目仪表板，无需密码。",
+    },
+    openDashboard: { en: "Open my dashboard", id: "Buka dasbor saya", zh: "打开我的仪表板" },
   },
 } as const;

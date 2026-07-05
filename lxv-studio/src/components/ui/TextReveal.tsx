@@ -24,13 +24,13 @@ export function TextReveal({ text, className, id }: TextRevealProps) {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { type: "spring", damping: 12, stiffness: 100 },
+      transition: { type: "spring" as const, damping: 12, stiffness: 100 },
     },
     hidden: {
       opacity: 0,
       y: 20,
       filter: "blur(10px)",
-      transition: { type: "spring", damping: 12, stiffness: 100 },
+      transition: { type: "spring" as const, damping: 12, stiffness: 100 },
     },
   };
 
