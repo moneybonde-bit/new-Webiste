@@ -7,8 +7,10 @@ import type {
   Meeting,
   Note,
   NotificationItem,
+  Profile,
   Project,
   ProjectStatus,
+  UserRole,
 } from "../domain/types";
 import { PROJECT_STATUSES } from "../domain/types";
 import { stageConfig } from "../domain/pipeline";
@@ -55,15 +57,20 @@ function mapProject(r: ProjectRow): Project {
   };
 }
 
+type Row = Record<string, unknown>;
+
 /**
  * Production backend on Supabase (Postgres + RLS + Storage + Auth).
- * Schema lives in `supabase/schema.sql`; consultation submissions go through
- * the `submit_consultation` RPC so anonymous visitors can create a lead
- * without any table-level insert grants.
+ *
+ * Schema lives in `supabase/schema.sql`. Two operations go through
+ * SECURITY DEFINER RPCs instead of table writes:
+ *  - `submit_consultation` — so anonymous visitors have no insert grants
+ *  - `update_project_status` — so status + activity + notification commit
+ *    atomically in one transaction
  */
 export class SupabaseRepository implements PortalRepository {
   async submitConsultation(input: SubmitConsultationInput): Promise<SubmitConsultationResult> {
-    const supabase = getSupabase();
+    const supabase = await getSupabase();
     const { data, error } = await supabase.rpc("submit_consultation", {
       p_name: input.name,
       p_email: input.email.trim().toLowerCase(),
@@ -86,7 +93,8 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   private async selectProjects(): Promise<Project[]> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("projects")
       .select("*")
       .order("created_at", { ascending: false });
@@ -95,7 +103,8 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async getProject(id: string): Promise<Project | null> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("projects")
       .select("*")
       .eq("id", id)
@@ -109,24 +118,16 @@ export class SupabaseRepository implements PortalRepository {
     status: ProjectStatus,
     actorName: string,
   ): Promise<Project> {
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-      .from("projects")
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq("id", id)
-      .select()
-      .single();
+    const supabase = await getSupabase();
+    const { data, error } = await supabase.rpc("update_project_status", {
+      p_project_id: id,
+      p_status: status,
+      p_actor: actorName,
+    });
     if (error) throw error;
     const project = mapProject(data as ProjectRow);
+    // Fire-and-forget email; the dashboard notification is already committed.
     const stage = stageConfig(status);
-    await this.record(id, "status_changed", `Status moved to ${stage.label}`, actorName);
-    await supabase.from("notifications").insert({
-      project_id: id,
-      recipient_email: project.clientEmail,
-      title: `Your project is now in ${stage.label}`,
-      body: stage.description,
-    });
-    // Fire-and-forget email via edge function; dashboard notification already stored.
     void supabase.functions
       .invoke("notify-status-change", {
         body: {
@@ -141,14 +142,45 @@ export class SupabaseRepository implements PortalRepository {
     return project;
   }
 
+  async deleteProject(id: string): Promise<void> {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("projects").delete().eq("id", id);
+    if (error) throw error;
+  }
+
+  async listTeam(): Promise<Profile[]> {
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: true });
+    if (error) throw error;
+    return (data as Row[]).map((r) => ({
+      id: r.id as string,
+      email: r.email as string,
+      fullName: (r.full_name as string | null) ?? "",
+      company: (r.company as string | null) ?? null,
+      phone: (r.phone as string | null) ?? null,
+      role: r.role as UserRole,
+      createdAt: r.created_at as string,
+    }));
+  }
+
+  async setUserRole(userId: string, role: UserRole): Promise<void> {
+    const supabase = await getSupabase();
+    const { error } = await supabase.from("profiles").update({ role }).eq("id", userId);
+    if (error) throw error;
+  }
+
   async listFiles(projectId: string): Promise<FileAsset[]> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("files")
       .select("*")
       .eq("project_id", projectId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data as Array<Record<string, unknown>>).map((r) => ({
+    return (data as Row[]).map((r) => ({
       id: r.id as string,
       projectId: r.project_id as string,
       name: r.name as string,
@@ -163,7 +195,7 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async uploadFile(input: UploadFileInput): Promise<FileAsset> {
-    const supabase = getSupabase();
+    const supabase = await getSupabase();
     const path = `${input.projectId}/${crypto.randomUUID()}-${input.file.name}`;
     const { error: storageError } = await supabase.storage
       .from(FILES_BUCKET)
@@ -190,7 +222,7 @@ export class SupabaseRepository implements PortalRepository {
       `File "${input.file.name}" uploaded (${input.category})`,
       input.uploadedBy === "admin" ? "Luxavian" : "Client",
     );
-    const r = data as Record<string, unknown>;
+    const r = data as Row;
     return {
       id: r.id as string,
       projectId: input.projectId,
@@ -206,21 +238,23 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async getFileUrl(file: FileAsset): Promise<string | null> {
-    const { data, error } = await getSupabase()
-      .storage.from(FILES_BUCKET)
+    const supabase = await getSupabase();
+    const { data, error } = await supabase.storage
+      .from(FILES_BUCKET)
       .createSignedUrl(file.path, 60 * 10);
     if (error) return null;
     return data.signedUrl;
   }
 
   async listMeetings(projectId: string): Promise<Meeting[]> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("meetings")
       .select("*")
       .eq("project_id", projectId)
       .order("scheduled_at", { ascending: true });
     if (error) throw error;
-    return (data as Array<Record<string, unknown>>).map((r) => ({
+    return (data as Row[]).map((r) => ({
       id: r.id as string,
       projectId: r.project_id as string,
       title: r.title as string,
@@ -235,7 +269,7 @@ export class SupabaseRepository implements PortalRepository {
     meeting: Omit<Meeting, "id" | "createdAt">,
     actorName: string,
   ): Promise<Meeting> {
-    const supabase = getSupabase();
+    const supabase = await getSupabase();
     const { data, error } = await supabase
       .from("meetings")
       .insert({
@@ -263,12 +297,13 @@ export class SupabaseRepository implements PortalRepository {
         body: `${meeting.title} — ${new Date(meeting.scheduledAt).toLocaleString()}`,
       });
     }
-    const r = data as Record<string, unknown>;
+    const r = data as Row;
     return { ...meeting, id: r.id as string, createdAt: r.created_at as string };
   }
 
   async listNotes(projectId: string, includeInternal: boolean): Promise<Note[]> {
-    let query = getSupabase()
+    const supabase = await getSupabase();
+    let query = supabase
       .from("notes")
       .select("*")
       .eq("project_id", projectId)
@@ -276,7 +311,7 @@ export class SupabaseRepository implements PortalRepository {
     if (!includeInternal) query = query.eq("internal", false);
     const { data, error } = await query;
     if (error) throw error;
-    return (data as Array<Record<string, unknown>>).map((r) => ({
+    return (data as Row[]).map((r) => ({
       id: r.id as string,
       projectId: r.project_id as string,
       body: r.body as string,
@@ -287,7 +322,8 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async addNote(note: Omit<Note, "id" | "createdAt">): Promise<Note> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("notes")
       .insert({
         project_id: note.projectId,
@@ -304,18 +340,19 @@ export class SupabaseRepository implements PortalRepository {
       note.internal ? "Internal note added" : "Note shared with client",
       note.authorName,
     );
-    const r = data as Record<string, unknown>;
+    const r = data as Row;
     return { ...note, id: r.id as string, createdAt: r.created_at as string };
   }
 
   async listNotifications(recipientId: string): Promise<NotificationItem[]> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("notifications")
       .select("*")
       .eq("recipient_email", recipientId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data as Array<Record<string, unknown>>).map((r) => ({
+    return (data as Row[]).map((r) => ({
       id: r.id as string,
       projectId: r.project_id as string,
       recipientId: r.recipient_email as string,
@@ -327,7 +364,8 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async markNotificationsRead(recipientId: string): Promise<void> {
-    const { error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { error } = await supabase
       .from("notifications")
       .update({ read: true })
       .eq("recipient_email", recipientId)
@@ -336,13 +374,14 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async listActivity(projectId: string): Promise<ActivityEvent[]> {
-    const { data, error } = await getSupabase()
+    const supabase = await getSupabase();
+    const { data, error } = await supabase
       .from("activity")
       .select("*")
       .eq("project_id", projectId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data as Array<Record<string, unknown>>).map((r) => ({
+    return (data as Row[]).map((r) => ({
       id: r.id as string,
       projectId: r.project_id as string,
       kind: r.kind as ActivityKind,
@@ -353,8 +392,9 @@ export class SupabaseRepository implements PortalRepository {
   }
 
   async getMetrics(): Promise<DashboardMetrics> {
+    const supabase = await getSupabase();
     const projects = await this.getAllProjects();
-    const { count: meetingsCount } = await getSupabase()
+    const { count: meetingsCount } = await supabase
       .from("meetings")
       .select("*", { count: "exact", head: true });
     const byStatus = Object.fromEntries(
@@ -382,7 +422,8 @@ export class SupabaseRepository implements PortalRepository {
     summary: string,
     actorName: string,
   ): Promise<void> {
-    await getSupabase()
+    const supabase = await getSupabase();
+    await supabase
       .from("activity")
       .insert({ project_id: projectId, kind, summary, actor_name: actorName });
   }

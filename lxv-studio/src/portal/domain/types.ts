@@ -23,7 +23,15 @@ export const PROJECT_STATUSES = [
 
 export type ProjectStatus = (typeof PROJECT_STATUSES)[number];
 
-export type UserRole = "client" | "admin";
+/**
+ * RBAC roles:
+ * - client       — sees only their own projects
+ * - admin        — full CRM access
+ * - super_admin  — admin + team/role management + destructive actions
+ */
+export type UserRole = "client" | "admin" | "super_admin";
+
+export const ADMIN_ROLES: readonly UserRole[] = ["admin", "super_admin"];
 
 export interface Profile {
   id: string;

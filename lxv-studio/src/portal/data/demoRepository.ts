@@ -6,8 +6,10 @@ import type {
   Meeting,
   Note,
   NotificationItem,
+  Profile,
   Project,
   ProjectStatus,
+  UserRole,
 } from "../domain/types";
 import { PROJECT_STATUSES } from "../domain/types";
 import { stageConfig } from "../domain/pipeline";
@@ -28,6 +30,7 @@ import type {
 
 const KEY = "lxv.portal.demo.v1";
 export const DEMO_SESSION_KEY = "lxv.portal.demo.session";
+const DEMO_ROLES_KEY = "lxv.portal.demo.roles";
 
 interface DemoDb {
   projects: Project[];
@@ -75,6 +78,32 @@ const blobUrls = new Map<string, string>();
 
 export function demoSessionEmail(): string | null {
   return localStorage.getItem(DEMO_SESSION_KEY);
+}
+
+function loadRoles(): Record<string, UserRole> {
+  try {
+    return JSON.parse(localStorage.getItem(DEMO_ROLES_KEY) ?? "{}") as Record<string, UserRole>;
+  } catch {
+    return {};
+  }
+}
+
+function saveRoles(roles: Record<string, UserRole>): void {
+  localStorage.setItem(DEMO_ROLES_KEY, JSON.stringify(roles));
+}
+
+export function demoRoleFor(email: string): UserRole {
+  return loadRoles()[email] ?? "client";
+}
+
+/** The first account to sign in at /admin/login becomes the demo super admin. */
+export function demoGrantInitialAdmin(email: string): void {
+  const roles = loadRoles();
+  const hasAdmin = Object.values(roles).some((r) => r !== "client");
+  if (!hasAdmin) {
+    roles[email] = "super_admin";
+    saveRoles(roles);
+  }
 }
 
 export class DemoRepository implements PortalRepository {
@@ -149,6 +178,42 @@ export class DemoRepository implements PortalRepository {
     });
     save(db);
     return project;
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    const db = load();
+    db.projects = db.projects.filter((p) => p.id !== id);
+    db.files = db.files.filter((f) => f.projectId !== id);
+    db.meetings = db.meetings.filter((m) => m.projectId !== id);
+    db.notes = db.notes.filter((n) => n.projectId !== id);
+    db.notifications = db.notifications.filter((n) => n.projectId !== id);
+    db.activity = db.activity.filter((a) => a.projectId !== id);
+    save(db);
+  }
+
+  async listTeam(): Promise<Profile[]> {
+    const roles = loadRoles();
+    const emails = new Set<string>([
+      ...Object.keys(roles),
+      ...load().projects.map((p) => p.clientEmail),
+    ]);
+    const session = demoSessionEmail();
+    if (session) emails.add(session);
+    return Array.from(emails).map((email) => ({
+      id: email,
+      email,
+      fullName: "",
+      company: null,
+      phone: null,
+      role: roles[email] ?? "client",
+      createdAt: new Date().toISOString(),
+    }));
+  }
+
+  async setUserRole(userId: string, role: UserRole): Promise<void> {
+    const roles = loadRoles();
+    roles[userId] = role;
+    saveRoles(roles);
   }
 
   async listFiles(projectId: string): Promise<FileAsset[]> {

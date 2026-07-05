@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "motion/react";
+import React, { useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
 interface TiltCardProps {
   children: React.ReactNode;

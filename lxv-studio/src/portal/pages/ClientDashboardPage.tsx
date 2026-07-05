@@ -84,11 +84,10 @@ export function ClientDashboardPage() {
     setData({ files, meetings, notes, activity });
   }, []);
 
+  const activeProjectId = project?.id ?? null;
   useEffect(() => {
-    if (!project) return;
-    setData(null);
-    void loadData(project.id);
-  }, [project?.id, loadData]);
+    if (activeProjectId) void loadData(activeProjectId);
+  }, [activeProjectId, loadData]);
 
   if (projects === null) return <FullPageSpinner />;
 
@@ -138,7 +137,10 @@ export function ClientDashboardPage() {
             Project
             <select
               value={activeId ?? ""}
-              onChange={(e) => setActiveId(e.target.value)}
+              onChange={(e) => {
+                setData(null); // clear stale data while the next project loads
+                setActiveId(e.target.value);
+              }}
               className="rounded-xl border border-white/10 bg-[#141318] px-3 py-2 text-sm text-white outline-none focus:border-neon-pink/60"
             >
               {projects.map((p) => (

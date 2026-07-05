@@ -25,8 +25,8 @@ export function LoginPage({ admin = false }: { admin?: boolean }) {
     (location.state as { from?: string } | null)?.from ?? (admin ? "/admin" : "/portal");
 
   if (!loading && user && !sent) {
-    // Already signed in — clients with admin role may still visit /portal.
-    if (!admin || user.role === "admin") return <Navigate to={target} replace />;
+    // Already signed in — staff may still visit /portal, clients can't enter /admin.
+    if (!admin || user.role !== "client") return <Navigate to={target} replace />;
   }
 
   const submit = async (e: React.FormEvent) => {

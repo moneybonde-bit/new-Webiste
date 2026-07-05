@@ -8,6 +8,7 @@ import {
   FolderKanban,
   LogOut,
   Menu,
+  ShieldCheck,
   X,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
@@ -25,12 +26,16 @@ const NAV = [
 
 /** Admin CRM layout: fixed sidebar on desktop, slide-over on mobile. */
 export function AdminShell({ title, children }: { title: string; children: React.ReactNode }) {
-  const { user, signOut } = useAuth();
+  const { user, isSuperAdmin, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const items = isSuperAdmin
+    ? [...NAV, { to: "/admin/team", label: "Team", icon: ShieldCheck, end: false }]
+    : NAV;
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Admin">
-      {NAV.map(({ to, label, icon: Icon, end }) => (
+      {items.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}
           to={to}

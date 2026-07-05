@@ -13,11 +13,9 @@ import {
 } from "lucide-react";
 import type { PackageDetail } from "@/src/data/pricingDetails";
 import type { Localized } from "@/src/lib/localize";
-import type { PricingPackage } from "./PricingCard";
 import { Button } from "../ui/Button";
 
 interface PackageDetailsProps {
-  pkg: PricingPackage;
   detail: PackageDetail;
   resolve: (value: Localized) => string;
   labels: {
@@ -91,7 +89,6 @@ function FaqRow({ question, answer }: { question: string; answer: string }) {
 
 /** Expanded content shown for the selected package in Compare Mode. */
 export function PackageDetails({
-  pkg,
   detail,
   resolve,
   labels,

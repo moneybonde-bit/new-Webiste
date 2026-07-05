@@ -218,8 +218,6 @@ export const consultationCopy = {
     notProvided: { en: "Not specified", id: "Belum diisi", zh: "未填写" },
   },
   cta: {
-    sendWhatsApp: { en: "Send via WhatsApp", id: "Kirim via WhatsApp", zh: "通过 WhatsApp 发送" },
-    schedule: { en: "Schedule a Meeting", id: "Jadwalkan Pertemuan", zh: "预约会议" },
     createWorkspace: {
       en: "Create my project workspace",
       id: "Buat ruang kerja proyek saya",

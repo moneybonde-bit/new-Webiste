@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Activity,
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   Mail,
   Phone,
   StickyNote,
+  Trash2,
   Video,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
@@ -42,7 +43,8 @@ import {
 /** Full CRM record for one project: status, notes, files, meetings, activity. */
 export function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, isSuperAdmin } = useAuth();
   const actor = user?.email ?? "Luxavian";
 
   const [project, setProject] = useState<Project | null | undefined>(undefined);
@@ -142,13 +144,31 @@ export function ProjectDetailPage() {
 
   return (
     <AdminShell title={project.name}>
-      <Link
-        to="/admin/projects"
-        className="mb-4 inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-        All projects
-      </Link>
+      <div className="mb-4 flex items-center justify-between">
+        <Link
+          to="/admin/projects"
+          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          All projects
+        </Link>
+        {isSuperAdmin && (
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm(`Delete ${project.code} and all its data? This cannot be undone.`)) {
+                void getRepository()
+                  .deleteProject(project.id)
+                  .then(() => navigate("/admin/projects", { replace: true }));
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-full border border-red-500/30 px-3 py-1.5 text-xs text-red-400 transition-colors hover:border-red-500/60 hover:text-red-300"
+          >
+            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+            Delete project
+          </button>
+        )}
+      </div>
 
       {/* Header card: client + status control */}
       <Card className="mb-6">
