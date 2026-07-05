@@ -71,7 +71,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <Link to="contact" smooth={true} duration={500} offset={-80}>
+            <Link to="pricing" smooth={true} duration={500} offset={-80}>
               <Button size="lg" className="w-full sm:w-auto gap-2">
                 {t("hero.cta1")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Button>

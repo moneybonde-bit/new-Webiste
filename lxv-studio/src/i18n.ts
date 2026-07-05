@@ -17,7 +17,7 @@ const resources = {
         title1: "Build Better.",
         title2: "Grow Smarter.",
         desc: "Website, dashboard, automation, and AI solutions that help businesses and organizations work more efficiently and build greater trust.",
-        cta1: "Start Your Project",
+        cta1: "Choose a Service",
         cta2: "Free Consultation"
       },
       about: {
@@ -47,6 +47,22 @@ const resources = {
       pricing: {
         title: "Pricing Packages",
         desc: "Choose the package that fits your organization's needs.",
+        compare: {
+          helper: "Click to compare",
+          delivery: "Estimated Delivery",
+          revisions: "Revision Policy",
+          support: "Support",
+          technology: "Technology Included",
+          bestFor: "Best For",
+          recentExample: "Recent Example",
+          viewDemo: "View Demo",
+          faq: "Frequently Asked Questions",
+          consult: "Free Consultation",
+          compareAll: "Compare All Packages",
+          selected: "Selected Package",
+          price: "Price",
+          close: "Close comparison"
+        },
         note: "• Prices above are starting prices.\n• Final costs will be adjusted based on the number of pages, features, design, integration, and project needs.\n• Domain, premium hosting, business email, or third-party services may incur additional costs depending on needs.\n• All projects begin with a consultation to ensure the provided solution exactly meets your needs.",
         packages: [
           {
@@ -242,7 +258,7 @@ const resources = {
         title1: "Build Better.",
         title2: "Grow Smarter.",
         desc: "Website, dashboard, otomasi, dan solusi AI yang membantu bisnis dan organisasi bekerja lebih efisien dan membangun kepercayaan yang lebih besar.",
-        cta1: "Mulai Proyek Anda",
+        cta1: "Pilih Layanan",
         cta2: "Konsultasi Gratis"
       },
       about: {
@@ -272,6 +288,22 @@ const resources = {
       pricing: {
         title: "Pilihan Layanan",
         desc: "Pilih paket yang sesuai dengan kebutuhan organisasi Anda.",
+        compare: {
+          helper: "Klik untuk membandingkan",
+          delivery: "Estimasi Pengerjaan",
+          revisions: "Kebijakan Revisi",
+          support: "Dukungan",
+          technology: "Teknologi Termasuk",
+          bestFor: "Cocok Untuk",
+          recentExample: "Contoh Terbaru",
+          viewDemo: "Lihat Demo",
+          faq: "Pertanyaan yang Sering Diajukan",
+          consult: "Konsultasi Gratis",
+          compareAll: "Bandingkan Semua Paket",
+          selected: "Paket Dipilih",
+          price: "Harga",
+          close: "Tutup perbandingan"
+        },
         note: "• Harga di atas adalah harga mulai (starting price).\n• Biaya akhir akan disesuaikan dengan jumlah halaman, fitur, desain, integrasi, dan kebutuhan proyek.\n• Domain, hosting premium, email bisnis, maupun layanan pihak ketiga dapat dikenakan biaya tambahan sesuai kebutuhan.\n• Seluruh proyek diawali dengan konsultasi agar solusi yang diberikan benar-benar sesuai dengan kebutuhan Anda.",
         packages: [
           {
@@ -467,7 +499,7 @@ const resources = {
         title1: "Build Better.",
         title2: "Grow Smarter.",
         desc: "帮助企业和组织更高效工作并建立更大信任的网站、仪表板、自动化和人工智能解决方案。",
-        cta1: "开始您的项目",
+        cta1: "选择服务",
         cta2: "免费咨询"
       },
       about: {
@@ -497,6 +529,22 @@ const resources = {
       pricing: {
         title: "服务套餐",
         desc: "选择适合您组织需求的套餐。",
+        compare: {
+          helper: "点击进行比较",
+          delivery: "预计交付时间",
+          revisions: "修订政策",
+          support: "技术支持",
+          technology: "包含技术",
+          bestFor: "适用于",
+          recentExample: "近期案例",
+          viewDemo: "查看演示",
+          faq: "常见问题",
+          consult: "免费咨询",
+          compareAll: "比较所有套餐",
+          selected: "所选套餐",
+          price: "价格",
+          close: "关闭比较"
+        },
         note: "• 以上价格为起始价格。\n• 最终费用将根据页面数量、功能、设计、集成和项目需求进行调整。\n• 域名、高级主机、企业电子邮件或第三方服务可能需要根据需求收取额外费用。\n• 所有项目都从咨询开始，以确保提供的解决方案完全符合您的需求。",
         packages: [
           {
