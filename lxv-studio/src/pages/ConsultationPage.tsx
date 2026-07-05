@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Link, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Home } from "lucide-react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Home, LayoutDashboard, MailCheck } from "lucide-react";
 import { useLocalized } from "../lib/localize";
-import { whatsappLink, siteConfig } from "../config/site";
+import { siteConfig } from "../config/site";
 import { Logo } from "../components/ui/Logo";
 import { Button } from "../components/ui/Button";
 import { StepProgress } from "../components/consultation/StepProgress";
@@ -21,16 +21,19 @@ import {
   type Option,
 } from "../data/consultation";
 import {
-  buildConsultationMessage,
   emptyConsultation,
   type ConsultationState,
   type ContactInfo,
 } from "../lib/consultationMessage";
+import { getRepository, isDemoMode } from "../portal/data";
+import { useAuth } from "../portal/auth/AuthContext";
 
 const TOTAL_STEPS = 7; // 0..5 questions + 6 review
 
 export function ConsultationPage() {
   const resolve = useLocalized();
+  const navigate = useNavigate();
+  const { signInWithMagicLink } = useAuth();
   const [params] = useSearchParams();
   const [state, setState] = useState<ConsultationState>(() => ({
     ...emptyConsultation,
@@ -39,6 +42,9 @@ export function ConsultationPage() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [contactErrors, setContactErrors] = useState<Partial<Record<keyof ContactInfo, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [createdCode, setCreatedCode] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -87,6 +93,9 @@ export function ConsultationPage() {
   const validateContact = (): boolean => {
     const errors: Partial<Record<keyof ContactInfo, string>> = {};
     if (!state.contact.name.trim()) errors.name = c(consultationCopy.validation.nameRequired);
+    // Email is required: it becomes the client's passwordless portal login.
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(state.contact.email.trim()))
+      errors.email = c(consultationCopy.validation.emailRequired);
     if (!state.contact.phone.trim() && !state.contact.whatsapp.trim())
       errors.phone = c(consultationCopy.validation.contactRequired);
     setContactErrors(errors);
@@ -104,9 +113,41 @@ export function ConsultationPage() {
     setStep((s) => Math.max(s - 1, 0));
   };
 
-  const handleSend = () => {
-    const message = buildConsultationMessage(state, resolve);
-    window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+  /**
+   * Create the project workspace: persist the consultation as a Project
+   * (LX-YYYY-NNNNNN), then send the magic link / open the dashboard.
+   */
+  const handleSubmit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      const { project } = await getRepository().submitConsultation({
+        name: state.contact.name.trim(),
+        email: state.contact.email.trim(),
+        company: state.contact.company.trim(),
+        phone: state.contact.phone.trim(),
+        whatsapp: state.contact.whatsapp.trim(),
+        answers: {
+          packageId: state.packageId,
+          businessType: state.businessType,
+          goals: state.goals,
+          timeline: state.timeline,
+          budget: state.budget,
+          meeting: state.meeting,
+          message: state.contact.message.trim(),
+        },
+      });
+      const { demo } = await signInWithMagicLink(state.contact.email, "/portal");
+      setCreatedCode(project.code);
+      if (demo) {
+        navigate("/portal", { replace: true });
+      }
+    } catch {
+      setSubmitError(c(consultationCopy.validation.submitFailed));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const labelFor = (list: Option[], id: string | null) => {
@@ -227,16 +268,56 @@ export function ConsultationPage() {
             resolve={resolve}
             labels={{
               meetingTitle: c(consultationCopy.cta.meetingTitle),
-              sendWhatsApp: c(consultationCopy.cta.sendWhatsApp),
-              schedule: c(consultationCopy.cta.schedule),
+              submit: c(consultationCopy.cta.createWorkspace),
+              submitting: c(consultationCopy.cta.creating),
+              hint: c(consultationCopy.cta.workspaceHint),
             }}
-            onSend={handleSend}
+            submitting={submitting}
+            error={submitError}
+            onSubmit={() => void handleSubmit()}
           />
         );
     }
   };
 
   const isReview = step === TOTAL_STEPS - 1;
+
+  // Post-submission screen (Supabase mode — demo mode redirects immediately).
+  if (createdCode) {
+    return (
+      <div className="relative flex min-h-screen flex-col bg-background">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[500px] bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(255,0,127,0.15),transparent_70%)]" />
+        <header className="border-b border-white/5">
+          <div className="container mx-auto flex items-center justify-between px-6 py-5">
+            <Link to="/" aria-label={`${siteConfig.legalName} — ${c(consultationCopy.backHome)}`}>
+              <Logo />
+            </Link>
+          </div>
+        </header>
+        <main className="flex flex-1 items-center justify-center px-6 py-16">
+          <div className="w-full max-w-md text-center">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15">
+              <MailCheck className="h-7 w-7 text-emerald-400" aria-hidden="true" />
+            </span>
+            <p className="mt-5 text-sm font-medium text-neon-pink">
+              {c(consultationCopy.success.eyebrow)}
+            </p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">
+              {c(consultationCopy.success.title)}
+            </h1>
+            <p className="mt-3 font-mono text-sm text-gray-400">{createdCode}</p>
+            <p className="mt-4 text-sm text-gray-400">
+              {isDemoMode ? c(consultationCopy.cta.workspaceHint) : c(consultationCopy.success.magicLink)}
+            </p>
+            <Button className="mt-8 gap-2" onClick={() => navigate("/portal")}>
+              <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+              {c(consultationCopy.success.openDashboard)}
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-background">

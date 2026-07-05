@@ -80,7 +80,8 @@ export function ContactForm({ value, onChange, labels, errors }: ContactFormProp
         />
       </Field>
 
-      <Field id="c-email" label={labels.email} optional={labels.optional}>
+      {/* Email is required — it powers the passwordless portal sign-in. */}
+      <Field id="c-email" label={labels.email} error={errors.email}>
         <input
           id="c-email"
           type="email"
@@ -88,7 +89,7 @@ export function ContactForm({ value, onChange, labels, errors }: ContactFormProp
           value={value.email}
           onChange={(e) => onChange({ email: e.target.value })}
           placeholder={labels.emailPlaceholder}
-          className={cn(inputBase, "border-white/10")}
+          className={cn(inputBase, errors.email ? "border-red-400/60" : "border-white/10")}
         />
       </Field>
 

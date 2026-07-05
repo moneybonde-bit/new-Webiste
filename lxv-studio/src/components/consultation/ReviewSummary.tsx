@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { MessageCircle, CalendarClock } from "lucide-react";
+import { CalendarClock, Rocket } from "lucide-react";
 import type { Option } from "@/src/data/consultation";
 import type { Localized } from "@/src/lib/localize";
 import { cn } from "@/src/lib/utils";
@@ -19,13 +19,16 @@ interface ReviewSummaryProps {
   resolve: (value: Localized) => string;
   labels: {
     meetingTitle: string;
-    sendWhatsApp: string;
-    schedule: string;
+    submit: string;
+    submitting: string;
+    hint: string;
   };
-  onSend: () => void;
+  submitting: boolean;
+  error: string | null;
+  onSubmit: () => void;
 }
 
-/** Final review: summarized answers, meeting preference, and send actions. */
+/** Final review: summarized answers, meeting preference, and workspace creation. */
 export function ReviewSummary({
   rows,
   meetingOptions,
@@ -33,7 +36,9 @@ export function ReviewSummary({
   onMeeting,
   resolve,
   labels,
-  onSend,
+  submitting,
+  error,
+  onSubmit,
 }: ReviewSummaryProps) {
   return (
     <div className="space-y-8">
@@ -88,15 +93,17 @@ export function ReviewSummary({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row">
-        <Button className="w-full gap-2" onClick={onSend}>
-          <MessageCircle className="h-4 w-4" aria-hidden="true" />
-          {labels.sendWhatsApp}
+      <div className="border-t border-white/10 pt-6">
+        {error && (
+          <p role="alert" className="mb-3 text-center text-sm text-red-400">
+            {error}
+          </p>
+        )}
+        <Button className="w-full gap-2" size="lg" onClick={onSubmit} disabled={submitting}>
+          <Rocket className="h-4 w-4" aria-hidden="true" />
+          {submitting ? labels.submitting : labels.submit}
         </Button>
-        <Button variant="outline" className="w-full gap-2" onClick={onSend}>
-          <CalendarClock className="h-4 w-4" aria-hidden="true" />
-          {labels.schedule}
-        </Button>
+        <p className="mt-3 text-center text-xs text-gray-500">{labels.hint}</p>
       </div>
     </div>
   );
