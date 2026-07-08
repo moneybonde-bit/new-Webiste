@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Reference Guide — Luxavian Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ ROOT / THEME TOKENS ============ */
+:root{
+  --lx-bg:#f7f5f1;
+  --lx-bg-alt:#ffffff;
+  --lx-surface:#ffffff;
+  --lx-text:#1c1a17;
+  --lx-text-muted:#6b6660;
+  --lx-border:#e5e1d8;
+  --lx-accent:#8a6d3b;
+  --lx-accent-soft:#f0e6d2;
+  --lx-sidebar-bg:#171512;
+  --lx-sidebar-text:#efe9df;
+  --lx-sidebar-muted:#a49b8c;
+  --lx-radius-s:10px;
+  --lx-radius-m:16px;
+  --lx-radius-l:26px;
+  --lx-shadow-soft:0 10px 30px rgba(28,26,23,0.06);
+  --lx-font-display:'Syne', sans-serif;
+  --lx-font-body:'Inter', sans-serif;
+  --lx-font-mono:'Space Grotesk', monospace;
+}
+html.dark{
+  --lx-bg:#121110;
+  --lx-bg-alt:#1a1815;
+  --lx-surface:#1e1c19;
+  --lx-text:#f1ede4;
+  --lx-text-muted:#a89e8e;
+  --lx-border:#332f28;
+  --lx-accent:#e0b96b;
+  --lx-accent-soft:#3a301c;
+  --lx-sidebar-bg:#0b0a09;
+  --lx-sidebar-text:#efe9df;
+  --lx-sidebar-muted:#7d7568;
+  --lx-shadow-soft:0 10px 30px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--lx-bg);
+  color:var(--lx-text);
+  font-family:var(--lx-font-body);
+  transition:background .3s ease, color .3s ease;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;display:block;}
+a{color:inherit;}
+
+/* ============ LAYOUT SHELL ============ */
+.lx-shell{
+  display:grid;
+  grid-template-columns:272px 1fr;
+  min-height:100vh;
+}
+
+/* ---- Sidebar ---- */
+.lx-sidebar{
+  background:var(--lx-sidebar-bg);
+  color:var(--lx-sidebar-text);
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  padding:28px 22px 40px;
+  border-right:1px solid rgba(255,255,255,0.06);
+}
+.lx-brand{
+  font-family:var(--lx-font-display);
+  font-weight:800;
+  font-size:20px;
+  letter-spacing:0.02em;
+  margin:0 0 2px;
+}
+.lx-brand span{color:var(--lx-accent);}
+.lx-brand-sub{
+  font-size:12px;
+  color:var(--lx-sidebar-muted);
+  margin:0 0 28px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.lx-nav-group-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--lx-sidebar-muted);
+  margin:22px 0 8px;
+  padding-left:4px;
+}
+.lx-nav-group-label:first-of-type{margin-top:0;}
+.lx-navlink{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  border-radius:9px;
+  font-size:13.5px;
+  color:var(--lx-sidebar-text);
+  text-decoration:none;
+  opacity:0.78;
+  transition:background .15s ease, opacity .15s ease;
+  cursor:pointer;
+}
+.lx-navlink:hover{background:rgba(255,255,255,0.06);opacity:1;}
+.lx-navlink.active{background:rgba(224,185,107,0.14);opacity:1;color:var(--lx-accent);}
+.lx-navlink .lx-num{
+  font-family:var(--lx-font-mono);
+  font-size:11px;
+  color:var(--lx-sidebar-muted);
+  min-width:16px;
+}
+
+/* ---- Main content ---- */
+.lx-main{padding:0 0 120px;}
+
+.lx-topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 40px;
+  background:color-mix(in srgb, var(--lx-bg) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--lx-border);
+}
+.lx-hamburger{
+  display:none;
+  background:none;
+  border:1px solid var(--lx-border);
+  border-radius:8px;
+  width:38px;height:38px;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  color:var(--lx-text);
+}
+.lx-hamburger span{display:block;width:16px;height:2px;background:currentColor;position:relative;}
+.lx-hamburger span::before,.lx-hamburger span::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;}
+.lx-hamburger span::before{top:-5px;}
+.lx-hamburger span::after{top:5px;}
+
+.lx-topbar-title{font-size:13px;color:var(--lx-text-muted);}
+.lx-theme-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:var(--lx-surface);
+  border:1px solid var(--lx-border);
+  border-radius:999px;
+  padding:6px 14px 6px 6px;
+  cursor:pointer;
+  font-size:12.5px;
+  font-family:var(--lx-font-body);
+  color:var(--lx-text);
+}
+.lx-theme-toggle .lx-dot{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--lx-accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;
+}
+
+.lx-hero{
+  padding:64px 40px 40px;
+  max-width:960px;
+}
+.lx-hero-eyebrow{
+  font-family:var(--lx-font-mono);
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--lx-accent);
+  margin:0 0 14px;
+}
+.lx-hero h1{
+  font-family:var(--lx-font-display);
+  font-weight:800;
+  font-size:clamp(32px,5vw,52px);
+  line-height:1.08;
+  margin:0 0 18px;
+  letter-spacing:-0.01em;
+}
+.lx-hero p{
+  font-size:16px;
+  line-height:1.7;
+  color:var(--lx-text-muted);
+  max-width:640px;
+  margin:0;
+}
+
+.lx-section{
+  padding:70px 40px;
+  border-top:1px solid var(--lx-border);
+  scroll-margin-top:80px;
+}
+.lx-section-head{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+.lx-section-num{
+  font-family:var(--lx-font-mono);
+  font-size:13px;
+  color:var(--lx-text-muted);
+}
+.lx-section-head h2{
+  font-family:var(--lx-font-display);
+  font-size:clamp(24px,3vw,34px);
+  font-weight:700;
+  margin:0;
+}
+.lx-section-desc{
+  color:var(--lx-text-muted);
+  max-width:680px;
+  line-height:1.7;
+  margin:14px 0 34px;
+  font-size:15px;
+}
+
+.lx-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--lx-accent-soft);
+  color:var(--lx-accent);
+  font-size:11.5px;
+  font-weight:600;
+  padding:5px 11px;
+  border-radius:999px;
+  font-family:var(--lx-font-body);
+}
+
+.lx-grid-2col{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  align-items:start;
+}
+@media(max-width:900px){.lx-grid-2col{grid-template-columns:1fr;}}
+
+.lx-info-block{
+  background:var(--lx-surface);
+  border:1px solid var(--lx-border);
+  border-radius:var(--lx-radius-m);
+  padding:24px 26px;
+}
+.lx-info-block h4{
+  margin:0 0 10px;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--lx-text-muted);
+}
+.lx-info-block p, .lx-info-block li{
+  font-size:14px;
+  line-height:1.65;
+  color:var(--lx-text);
+}
+.lx-info-block ul{margin:0;padding-left:18px;}
+
+.lx-swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+.lx-swatch{text-align:center;width:76px;}
+.lx-swatch-color{
+  width:52px;height:52px;border-radius:50%;
+  margin:0 auto 8px;
+  border:1px solid rgba(0,0,0,0.08);
+}
+.lx-swatch-label{font-size:10.5px;color:var(--lx-text-muted);text-transform:uppercase;letter-spacing:0.04em;}
+.lx-swatch-hex{font-family:var(--lx-font-mono);font-size:11.5px;font-weight:600;}
+
+.lx-copy-btn{
+  margin-top:16px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:none;
+  border:none;
+  color:var(--lx-accent);
+  font-family:var(--lx-font-body);
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  padding:0;
+}
+.lx-copy-btn:hover{text-decoration:underline;}
+
+/* Fonts pairing preview */
+.lx-font-preview{margin-top:6px;}
+.lx-font-preview .headline{font-size:26px;margin:0 0 4px;line-height:1.25;}
+.lx-font-preview .meta{font-size:12px;color:var(--lx-text-muted);}
+.lx-scale-row{
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  padding:8px 0;
+  border-bottom:1px dashed var(--lx-border);
+}
+.lx-scale-row:last-child{border-bottom:none;}
+.lx-scale-tag{
+  font-family:var(--lx-font-mono);
+  font-size:11px;
+  color:var(--lx-text-muted);
+  width:52px;
+  flex-shrink:0;
+}
+
+/* Modal */
+.lx-modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,9,8,0.6);
+  backdrop-filter:blur(3px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:24px;
+}
+.lx-modal-overlay.open{display:flex;}
+.lx-modal{
+  background:var(--lx-surface);
+  border:1px solid var(--lx-border);
+  border-radius:var(--lx-radius-m);
+  max-width:640px;
+  width:100%;
+  max-height:80vh;
+  overflow:auto;
+  padding:26px 28px 30px;
+  box-shadow:var(--lx-shadow-soft);
+}
+.lx-modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.lx-modal-head h3{font-family:var(--lx-font-display);font-size:18px;margin:0;}
+.lx-modal-close{
+  background:none;border:1px solid var(--lx-border);
+  border-radius:8px;width:30px;height:30px;
+  cursor:pointer;color:var(--lx-text);font-size:15px;
+}
+.lx-modal pre{
+  background:#161412;
+  color:#e6dfce;
+  padding:18px;
+  border-radius:10px;
+  font-family:var(--lx-font-mono);
+  font-size:12.5px;
+  line-height:1.6;
+  overflow-x:auto;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+html.dark .lx-modal pre{background:#0d0c0b;}
+.lx-modal-copybtn{
+  margin-top:10px;
+  background:var(--lx-accent);
+  color:#1c1a17;
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:12.5px;
+  cursor:pointer;
+}
+
+/* Client label pill */
+.lx-clients{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.lx-client-pill{
+  font-size:11.5px;
+  border:1px solid var(--lx-border);
+  padding:5px 12px;
+  border-radius:999px;
+  color:var(--lx-text-muted);
+}
+
+/* Footer */
+.lx-footer{
+  padding:50px 40px;
+  text-align:center;
+  color:var(--lx-text-muted);
+  font-size:13px;
+}
+
+/* Mobile sidebar */
+@media(max-width:960px){
+  .lx-shell{grid-template-columns:1fr;}
+  .lx-sidebar{
+    position:fixed;
+    left:0;top:0;
+    width:78%;
+    max-width:300px;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+    z-index:50;
+    box-shadow:20px 0 40px rgba(0,0,0,0.3);
+  }
+  .lx-sidebar.open{transform:translateX(0);}
+  .lx-hamburger{display:flex;}
+  .lx-sidebar-scrim{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.4);
+    z-index:40;
+  }
+  .lx-sidebar-scrim.open{display:block;}
+  .lx-section, .lx-hero{padding-left:22px;padding-right:22px;}
+  .lx-topbar{padding:14px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="lx-sidebar-scrim" id="scrim"></div>
+
+<div class="lx-shell">
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="lx-sidebar" id="sidebar">
+    <p class="lx-brand">Luxavian <span>Studio</span></p>
+    <p class="lx-brand-sub">Design Reference Guide</p>
+
+    <p class="lx-nav-group-label">Mulai</p>
+    <a class="lx-navlink" data-target="intro"><span class="lx-num">00</span> Pendahuluan</a>
+
+    <p class="lx-nav-group-label">9 Tema Desain</p>
+    <a class="lx-navlink" data-target="glassmorphism"><span class="lx-num">01</span> Glassmorphism</a>
+    <a class="lx-navlink" data-target="neumorphism"><span class="lx-num">02</span> Neumorphism</a>
+    <a class="lx-navlink" data-target="claymorphism"><span class="lx-num">03</span> Claymorphism</a>
+    <a class="lx-navlink" data-target="bento"><span class="lx-num">04</span> Bento Grid</a>
+    <a class="lx-navlink" data-target="neobrutalism"><span class="lx-num">05</span> Neobrutalism</a>
+    <a class="lx-navlink" data-target="aurora"><span class="lx-num">06</span> Aurora UI</a>
+    <a class="lx-navlink" data-target="y2k"><span class="lx-num">07</span> Y2K Revival</a>
+    <a class="lx-navlink" data-target="minimalist"><span class="lx-num">08</span> Minimalist Modern</a>
+    <a class="lx-navlink" data-target="organic"><span class="lx-num">09</span> Organic / Hand-drawn</a>
+
+    <p class="lx-nav-group-label">Referensi Tambahan</p>
+    <a class="lx-navlink" data-target="palette-ref"><span class="lx-num">•</span> Color Palette Reference</a>
+    <a class="lx-navlink" data-target="typography-ref"><span class="lx-num">•</span> Typography Pairing</a>
+    <a class="lx-navlink" data-target="timeline"><span class="lx-num">•</span> Trend Timeline</a>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="lx-main">
+    <div class="lx-topbar">
+      <button class="lx-hamburger" id="hamburgerBtn" aria-label="Buka menu"><span></span></button>
+      <span class="lx-topbar-title">Design Reference · Luxavian Studio</span>
+      <button class="lx-theme-toggle" id="themeToggle">
+        <span class="lx-dot" id="themeDot">☾</span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+    </div>
+
+    <section class="lx-hero" id="intro">
+      <p class="lx-hero-eyebrow">Design System Reference — 2024–2026</p>
+      <h1>Panduan Gaya Desain untuk<br>Setiap Proyek Luxavian.</h1>
+      <p>Dokumen ini adalah rujukan berisi 9 arah desain populer yang bisa dipakai untuk
+      seluruh jenis deliverable studio — website company profile, landing page produk,
+      undangan digital, portofolio, dashboard internal, hingga sistem informasi. Setiap
+      tema dilengkapi deskripsi, palet warna, pasangan tipografi, demo visual langsung,
+      serta rekomendasi jenis proyek — agar tim desain, sales, maupun klien bisa cepat
+      menyelaraskan ekspektasi sejak awal.</p>
+    </section>
+
+    <!-- ============ 01 GLASSMORPHISM ============ -->
+    <section class="lx-section" id="glassmorphism">
+      <style>
+        .gm-stage{background:linear-gradient(135deg,#1b1035,#0e1b3d 60%,#1b1035);border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;justify-content:center;position:relative;overflow:hidden;}
+        .gm-stage::before,.gm-stage::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;filter:blur(60px);opacity:0.55;}
+        .gm-stage::before{background:#7c5cff;top:-40px;left:-30px;}
+        .gm-stage::after{background:#ff7ce0;bottom:-50px;right:-20px;}
+        .gm-card{position:relative;z-index:2;width:280px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.25);border-radius:20px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:26px 24px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+        .gm-card h5{margin:0 0 6px;font-family:var(--lx-font-display);font-size:18px;}
+        .gm-card p{margin:0 0 18px;font-size:13px;color:rgba(255,255,255,0.7);}
+        .gm-nav{display:flex;gap:10px;}
+        .gm-nav span{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.25);padding:6px 12px;border-radius:999px;font-size:11.5px;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">01</span><h2>Glassmorphism</h2></div>
+      <p class="lx-section-desc">Efek kaca buram (frosted-glass) dengan lapisan semi-transparan dan blur pada backdrop, menciptakan kesan modern, ringan, dan berlapis. Cocok untuk tampilan yang ingin terasa premium namun tetap futuristik, dengan latar gelap yang membuat elemen kaca lebih menonjol.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="gm-stage">
+            <div class="gm-card">
+              <h5>Kartu Navigasi</h5>
+              <p>Navigation card dengan efek frosted-glass di atas gradient gelap.</p>
+              <div class="gm-nav"><span>Acara</span><span>Galeri</span><span>RSVP</span></div>
+            </div>
+          </div>
+          <button class="lx-copy-btn" data-modal-title="Glassmorphism — CSS" data-modal-code="glassmorphism">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Landing page produk digital, undangan pernikahan modern-elegan, portofolio kreatif, atau brand yang ingin tampil "high-tech" dan premium tanpa terasa kaku.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#1b1035;"></div><div class="lx-swatch-hex">#1B1035</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#0e1b3d;"></div><div class="lx-swatch-hex">#0E1B3D</div><div class="lx-swatch-label">Secondary</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#7c5cff;"></div><div class="lx-swatch-hex">#7C5CFF</div><div class="lx-swatch-label">Accent</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ffffff;border:1px solid #ddd;"></div><div class="lx-swatch-hex">#FFFFFF</div><div class="lx-swatch-label">Text (85%)</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Space Grotesk (heading) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Wedding Modern</span><span class="lx-client-pill">Startup Tech</span><span class="lx-client-pill">Portofolio Kreatif</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 02 NEUMORPHISM ============ -->
+    <section class="lx-section" id="neumorphism">
+      <style>
+        .nm-stage{background:#e0e5ec;border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap;}
+        .nm-card{background:#e0e5ec;border-radius:20px;width:220px;padding:26px;box-shadow:9px 9px 18px #b8bec7, -9px -9px 18px #ffffff;color:#3a3f47;}
+        .nm-card h5{margin:0 0 6px;font-size:16px;font-family:var(--lx-font-body);font-weight:700;}
+        .nm-card p{margin:0 0 18px;font-size:12.5px;color:#6b7280;}
+        .nm-btn{border:none;background:#e0e5ec;padding:10px 18px;border-radius:12px;font-size:12.5px;font-weight:600;color:#3a3f47;box-shadow:5px 5px 10px #b8bec7, -5px -5px 10px #ffffff;cursor:pointer;}
+        .nm-toggle-wrap{display:flex;align-items:center;justify-content:center;}
+        .nm-inset{width:200px;height:120px;border-radius:18px;background:#e0e5ec;box-shadow:inset 6px 6px 12px #b8bec7, inset -6px -6px 12px #ffffff;display:flex;align-items:center;justify-content:center;color:#8b93a1;font-size:12px;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">02</span><h2>Neumorphism (Soft UI)</h2></div>
+      <p class="lx-section-desc">Elemen tampak "timbul" atau "tenggelam" dari background melalui kombinasi soft shadow terang dan gelap. Kesannya lembut, tenang, dan tactile — seperti panel fisik yang bisa disentuh, cocok untuk nuansa yang kalem dan minim kontras.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="nm-stage">
+            <div class="nm-card"><h5>Detail Acara</h5><p>Card dengan outer shadow soft, tampak timbul dari background.</p><button class="nm-btn">Lihat Peta</button></div>
+            <div class="nm-toggle-wrap"><div class="nm-inset">inset panel</div></div>
+          </div>
+          <button class="lx-copy-btn" data-modal-title="Neumorphism — CSS" data-modal-code="neumorphism">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Aplikasi dashboard, profil personal yang tenang, atau undangan bernuansa soft & elegan yang menghindari warna mencolok. Kurang ideal untuk konten dengan banyak teks karena kontras rendah.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#e0e5ec;"></div><div class="lx-swatch-hex">#E0E5EC</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#b8bec7;"></div><div class="lx-swatch-hex">#B8BEC7</div><div class="lx-swatch-label">Shadow Dark</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ffffff;border:1px solid #ddd;"></div><div class="lx-swatch-hex">#FFFFFF</div><div class="lx-swatch-label">Shadow Light</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#3a3f47;"></div><div class="lx-swatch-hex">#3A3F47</div><div class="lx-swatch-label">Text</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Inter (heading) + Inter (body) — konsisten satu keluarga font agar terasa halus</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Klinik / Wellness</span><span class="lx-client-pill">Personal Branding</span><span class="lx-client-pill">Aplikasi Internal</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 03 CLAYMORPHISM ============ -->
+    <section class="lx-section" id="claymorphism">
+      <style>
+        .cl-stage{background:#fdf3f8;border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;justify-content:center;}
+        .cl-card{width:260px;background:#ffd6e8;border-radius:34px;padding:28px;box-shadow:0 14px 0 -4px rgba(255,182,209,0.6), 0 18px 30px rgba(216,120,164,0.35);border:3px solid #fff;}
+        .cl-card h5{margin:0 0 8px;font-family:var(--lx-font-display);font-size:18px;color:#7a3b58;}
+        .cl-card p{margin:0 0 16px;font-size:12.5px;color:#9a5c78;}
+        .cl-pill{display:inline-block;background:#c9f5df;border:3px solid #fff;padding:8px 18px;border-radius:30px;font-size:12px;font-weight:700;color:#276a4c;box-shadow:0 8px 0 -3px rgba(163,230,196,0.7);}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">03</span><h2>Claymorphism</h2></div>
+      <p class="lx-section-desc">Gaya 3D playful dengan sudut membulat ekstrem, seolah elemen dibentuk dari tanah liat (clay) — lengkap dengan shadow tebal dan outline putih. Warnanya cerah dan pastel, menghadirkan kesan ceria, ramah, dan approachable.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="cl-stage"><div class="cl-card"><h5>Save the Date 🎉</h5><p>Card clay dengan border putih tebal dan shadow warna solid di bawahnya.</p><span class="cl-pill">Konfirmasi Hadir</span></div></div>
+          <button class="lx-copy-btn" data-modal-title="Claymorphism — CSS" data-modal-code="claymorphism">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Landing page brand makanan/minuman yang fun, aplikasi atau produk dengan audiens muda, microsite acara (ulang tahun, baby shower), atau UMKM yang ingin tampil hangat dan tidak formal.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#fdf3f8;border:1px solid #eee;"></div><div class="lx-swatch-hex">#FDF3F8</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ffd6e8;"></div><div class="lx-swatch-hex">#FFD6E8</div><div class="lx-swatch-label">Primary</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#c9f5df;"></div><div class="lx-swatch-hex">#C9F5DF</div><div class="lx-swatch-label">Accent</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#7a3b58;"></div><div class="lx-swatch-hex">#7A3B58</div><div class="lx-swatch-label">Text</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Syne (heading, bulat & bold) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Ulang Tahun Anak</span><span class="lx-client-pill">UMKM F&B</span><span class="lx-client-pill">Baby Shower</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 04 BENTO GRID ============ -->
+    <section class="lx-section" id="bento">
+      <style>
+        .bt-stage{background:#f4f3f0;border-radius:var(--lx-radius-l);padding:32px;}
+        .bt-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,90px);gap:14px;}
+        .bt-box{background:#fff;border-radius:16px;padding:16px;font-size:12px;color:#57534d;border:1px solid #e7e4dd;display:flex;flex-direction:column;justify-content:space-between;}
+        .bt-box strong{font-size:13px;color:#1c1a17;}
+        .bt-box.accent{background:#1c1a17;color:#f4f3f0;border-color:#1c1a17;}
+        .bt-box.accent strong{color:#e0b96b;}
+        .bt-box.span2{grid-column:span 2;}
+        .bt-box.rowspan2{grid-row:span 2;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">04</span><h2>Bento Grid</h2></div>
+      <p class="lx-section-desc">Layout modular berisi kotak-kotak berbeda ukuran, terinspirasi kotak makan siang Jepang (bento). Populer sejak gaya Apple — rapi, terstruktur, dan cocok menampilkan banyak informasi tanpa terasa penuh sesak.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="bt-stage">
+            <div class="bt-grid">
+              <div class="bt-box rowspan2 accent"><strong>Galeri Foto</strong><span>24 momen</span></div>
+              <div class="bt-box span2"><strong>Tanggal Acara</strong><span>14 Feb 2027</span></div>
+              <div class="bt-box"><strong>Lokasi</strong><span>Bali</span></div>
+              <div class="bt-box"><strong>RSVP</strong><span>120 tamu</span></div>
+            </div>
+          </div>
+          <button class="lx-copy-btn" data-modal-title="Bento Grid — CSS" data-modal-code="bento">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Halaman ringkasan (dashboard, landing page produk, portofolio) yang perlu menampilkan banyak jenis konten sekaligus — foto, statistik, CTA — dalam satu pandangan yang rapi.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#f4f3f0;border:1px solid #eee;"></div><div class="lx-swatch-hex">#F4F3F0</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ffffff;border:1px solid #eee;"></div><div class="lx-swatch-hex">#FFFFFF</div><div class="lx-swatch-label">Card</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#1c1a17;"></div><div class="lx-swatch-hex">#1C1A17</div><div class="lx-swatch-label">Accent Box</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#e0b96b;"></div><div class="lx-swatch-hex">#E0B96B</div><div class="lx-swatch-label">Accent Text</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Space Grotesk (heading) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Properti / Real Estate</span><span class="lx-client-pill">Portofolio Studio</span><span class="lx-client-pill">Company Profile</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 05 NEOBRUTALISM ============ -->
+    <section class="lx-section" id="neobrutalism">
+      <style>
+        .nb-stage{background:#fff200;border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;}
+        .nb-card{background:#fff;border:3px solid #111;border-radius:4px;width:220px;padding:22px;box-shadow:8px 8px 0 #111;}
+        .nb-card h5{margin:0 0 8px;font-size:16px;font-weight:800;}
+        .nb-card p{margin:0 0 16px;font-size:12.5px;}
+        .nb-btn{background:#ff5b5b;border:3px solid #111;border-radius:4px;padding:9px 16px;font-weight:800;font-size:12.5px;box-shadow:5px 5px 0 #111;cursor:pointer;}
+        .nb-btn:active{box-shadow:2px 2px 0 #111;transform:translate(3px,3px);}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">05</span><h2>Neobrutalism</h2></div>
+      <p class="lx-section-desc">Border hitam tebal, drop shadow solid tanpa blur, dan warna kontras tinggi/neon. Gaya ini sengaja "kasar" dan jujur — anti-polesan — sehingga terasa berani, jujur, dan mudah diingat.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="nb-stage"><div class="nb-card"><h5>Grand Opening!</h5><p>Card dengan border solid 3px dan offset shadow keras, tanpa gradasi.</p><button class="nb-btn">DAFTAR SEKARANG</button></div></div>
+          <button class="lx-copy-btn" data-modal-title="Neobrutalism — CSS" data-modal-code="neobrutalism">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Brand yang ingin tampil berani, event anak muda, produk kreatif/indie, atau kampanye yang butuh CTA sangat mencolok dan tidak terlihat "generic corporate".</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#fff200;border:1px solid #ddd;"></div><div class="lx-swatch-hex">#FFF200</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#111111;"></div><div class="lx-swatch-hex">#111111</div><div class="lx-swatch-label">Border/Text</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ff5b5b;"></div><div class="lx-swatch-hex">#FF5B5B</div><div class="lx-swatch-label">Accent</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ffffff;border:1px solid #ddd;"></div><div class="lx-swatch-hex">#FFFFFF</div><div class="lx-swatch-label">Card BG</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Syne Extra Bold (heading) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Brand Streetwear</span><span class="lx-client-pill">Event Anak Muda</span><span class="lx-client-pill">Produk Indie</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 06 AURORA UI ============ -->
+    <section class="lx-section" id="aurora">
+      <style>
+        .au-stage{background:#0b0d12;border-radius:var(--lx-radius-l);padding:56px 32px;position:relative;overflow:hidden;display:flex;justify-content:center;}
+        .au-glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.55;}
+        .au-glow.g1{width:240px;height:240px;background:#22d3a5;top:-60px;left:-40px;}
+        .au-glow.g2{width:220px;height:220px;background:#8b5cf6;bottom:-60px;right:-20px;}
+        .au-glow.g3{width:180px;height:180px;background:#22c9d3;top:30px;right:60px;}
+        .au-card{position:relative;z-index:2;width:300px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;color:#f2f2f5;}
+        .au-card h5{margin:0 0 8px;font-family:var(--lx-font-display);font-size:20px;background:linear-gradient(90deg,#22d3a5,#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+        .au-card p{margin:0;font-size:12.5px;color:rgba(255,255,255,0.6);}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">06</span><h2>Aurora UI / Dark Gradient</h2></div>
+      <p class="lx-section-desc">Latar gelap dengan glow gradasi warna-warni yang mengambang lembut, terinspirasi cahaya aurora. Memberi kesan mewah, futuristik, dan sinematik — cocok untuk brand premium yang ingin tampil dramatis di layar gelap.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="au-stage">
+            <div class="au-glow g1"></div><div class="au-glow g2"></div><div class="au-glow g3"></div>
+            <div class="au-card"><h5>Hero Premium</h5><p>Hero card dengan glow gradient blur mengambang di belakang panel gelap transparan.</p></div>
+          </div>
+          <button class="lx-copy-btn" data-modal-title="Aurora UI — CSS" data-modal-code="aurora">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Landing page produk teknologi premium, company profile mewah bertema gelap, portofolio kreatif, atau microsite acara eksklusif yang ingin efek "wow" tanpa terasa ramai.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#0b0d12;"></div><div class="lx-swatch-hex">#0B0D12</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#22d3a5;"></div><div class="lx-swatch-hex">#22D3A5</div><div class="lx-swatch-label">Glow 1</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#8b5cf6;"></div><div class="lx-swatch-hex">#8B5CF6</div><div class="lx-swatch-label">Glow 2</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#22c9d3;"></div><div class="lx-swatch-hex">#22C9D3</div><div class="lx-swatch-label">Glow 3</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Syne (heading, gradient text) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Produk Premium</span><span class="lx-client-pill">Tech Product Launch</span><span class="lx-client-pill">Portofolio Kreatif</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 07 Y2K REVIVAL ============ -->
+    <section class="lx-section" id="y2k">
+      <style>
+        .y2k-stage{background:linear-gradient(135deg,#dcdfe6,#f4f6fa);border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+        .y2k-badge{padding:14px 28px;border-radius:999px;font-family:var(--lx-font-mono);font-weight:700;font-size:14px;color:#1c1a17;background:linear-gradient(120deg,#e8eaf0,#c6c9d4,#f5f6fa,#b9bcc7);border:1px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8);}
+        .y2k-badge.pink{background:linear-gradient(120deg,#ff2ec4,#ff8ce0,#ff2ec4);color:#fff;}
+        .y2k-badge.lime{background:linear-gradient(120deg,#caff2e,#eaff9c,#caff2e);color:#1c1a17;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">07</span><h2>Y2K Revival</h2></div>
+      <p class="lx-section-desc">Kebangkitan estetika awal tahun 2000-an: gradasi metalik seperti krom, warna neon, dan sentuhan retro-futuristik. Nostalgia namun terasa segar kembali di kalangan Gen Z — playful, eye-catching, dan sedikit maksimalis.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="y2k-stage"><span class="y2k-badge">CHROME</span><span class="y2k-badge pink">HOT PINK</span><span class="y2k-badge lime">ELECTRIC LIME</span></div>
+          <button class="lx-copy-btn" data-modal-title="Y2K Revival — CSS" data-modal-code="y2k">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Brand fashion/musik untuk audiens muda, ulang tahun tema retro, atau kampanye yang ingin terasa nostalgik sekaligus playful dan berani secara visual.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#c6c9d4;"></div><div class="lx-swatch-hex">#C6C9D4</div><div class="lx-swatch-label">Chrome</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#ff2ec4;"></div><div class="lx-swatch-hex">#FF2EC4</div><div class="lx-swatch-label">Hot Pink</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#2ec4ff;"></div><div class="lx-swatch-hex">#2EC4FF</div><div class="lx-swatch-label">Electric Blue</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#caff2e;"></div><div class="lx-swatch-hex">#CAFF2E</div><div class="lx-swatch-label">Lime</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Space Grotesk (heading, tebal) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Fashion / Streetwear</span><span class="lx-client-pill">Ultah Tema Retro</span><span class="lx-client-pill">Brand Musik</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 08 MINIMALIST MODERN ============ -->
+    <section class="lx-section" id="minimalist">
+      <style>
+        .mm-stage{background:#faf9f6;border-radius:var(--lx-radius-l);padding:64px 32px;display:flex;justify-content:center;}
+        .mm-card{max-width:340px;text-align:left;}
+        .mm-card .eyebrow{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7a8a76;margin-bottom:10px;}
+        .mm-card h5{font-family:'Playfair Display',serif;font-size:28px;margin:0 0 12px;color:#22261f;line-height:1.2;}
+        .mm-card p{font-size:13px;color:#6b6a63;line-height:1.7;margin:0 0 18px;}
+        .mm-line{width:40px;height:2px;background:#7a8a76;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">08</span><h2>Minimalist Modern (Clean)</h2></div>
+      <p class="lx-section-desc">Whitespace lega, tipografi kuat sebagai fokus utama, dan satu warna aksen saja. Gaya ini "berbicara" lewat kesederhanaan — elegan tanpa perlu banyak dekorasi, memberi kesan tenang dan berkelas.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="mm-stage"><div class="mm-card"><p class="eyebrow">Studio Profile</p><h5>Desain yang<br>Timeless</h5><div class="mm-line"></div><p style="margin-top:14px;">Clean card dengan headline serif besar dan satu warna aksen sage green.</p></div></div>
+          <button class="lx-copy-btn" data-modal-title="Minimalist Modern — CSS" data-modal-code="minimalist">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Company profile & brand fashion/lifestyle premium, portofolio arsitek, landing page editorial, undangan elegan, atau klien mana pun yang ingin terlihat "timeless" dan tidak lekang tren.</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#faf9f6;border:1px solid #eee;"></div><div class="lx-swatch-hex">#FAF9F6</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#7a8a76;"></div><div class="lx-swatch-hex">#7A8A76</div><div class="lx-swatch-label">Accent (Sage)</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#22261f;"></div><div class="lx-swatch-hex">#22261F</div><div class="lx-swatch-label">Text</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#e5e3dc;"></div><div class="lx-swatch-hex">#E5E3DC</div><div class="lx-swatch-label">Divider</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> Playfair Display (heading) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Company Profile</span><span class="lx-client-pill">Arsitek / Interior</span><span class="lx-client-pill">Fashion Premium</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 09 ORGANIC / HAND-DRAWN ============ -->
+    <section class="lx-section" id="organic">
+      <style>
+        .og-stage{background:#f6efe4;border-radius:var(--lx-radius-l);padding:56px 32px;display:flex;justify-content:center;}
+        .og-card{position:relative;width:300px;background:#fffaf1;padding:28px;color:#5a4636;}
+        .og-card h5{font-family:'DM Serif Display',serif;font-size:22px;margin:0 0 10px;color:#7a3f2b;}
+        .og-card p{font-size:12.5px;line-height:1.7;margin:0;}
+        .og-border{position:absolute;inset:0;pointer-events:none;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">09</span><h2>Organic / Hand-drawn</h2></div>
+      <p class="lx-section-desc">Ilustrasi bergaya sketsa, border tidak simetris seperti digambar tangan, dan tone warna earthy. Memberi kesan hangat, personal, dan penuh cerita — cocok untuk brand yang ingin terasa manusiawi dan otentik.</p>
+      <div class="lx-grid-2col">
+        <div>
+          <div class="og-stage">
+            <div class="og-card">
+              <svg class="og-border" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M8,14 C4,60 14,140 6,206 C90,214 220,210 292,204 C298,140 290,50 294,10 C210,4 90,8 8,14 Z" fill="none" stroke="#7a3f2b" stroke-width="2.5" />
+              </svg>
+              <h5>Dari Kami, untuk Kalian</h5>
+              <p>Card dengan border SVG hand-drawn dan tekstur kertas — hangat dan personal.</p>
+            </div>
+          </div>
+          <button class="lx-copy-btn" data-modal-title="Organic / Hand-drawn — CSS" data-modal-code="organic">Copy CSS →</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div class="lx-info-block"><h4>Kapan Cocok Digunakan</h4><p>Company profile brand kopi/kerajinan lokal, portofolio ilustrator, website komunitas atau gereja bernuansa hangat, undangan syukuran, atau UMKM yang ingin menonjolkan sisi personal dan buatan tangan (handmade).</p></div>
+          <div class="lx-info-block">
+            <h4>Palet Warna & Font Pairing</h4>
+            <div class="lx-swatches">
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#f6efe4;border:1px solid #eee;"></div><div class="lx-swatch-hex">#F6EFE4</div><div class="lx-swatch-label">Background</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#7a3f2b;"></div><div class="lx-swatch-hex">#7A3F2B</div><div class="lx-swatch-label">Terracotta</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#3f5c3f;"></div><div class="lx-swatch-hex">#3F5C3F</div><div class="lx-swatch-label">Forest Green</div></div>
+              <div class="lx-swatch"><div class="lx-swatch-color" style="background:#fffaf1;border:1px solid #eee;"></div><div class="lx-swatch-hex">#FFFAF1</div><div class="lx-swatch-label">Cream</div></div>
+            </div>
+            <p style="margin-top:14px;"><strong>Font:</strong> DM Serif Display (heading) + Inter (body)</p>
+          </div>
+          <div class="lx-info-block"><h4>Cocok untuk Klien</h4><div class="lx-clients"><span class="lx-client-pill">Gereja / Syukuran</span><span class="lx-client-pill">UMKM Kopi & Kerajinan</span><span class="lx-client-pill">Komunitas Lokal</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COLOR PALETTE REFERENCE ============ -->
+    <section class="lx-section" id="palette-ref">
+      <style>
+        .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:10px;}
+        .pr-card{background:var(--lx-surface);border:1px solid var(--lx-border);border-radius:var(--lx-radius-m);padding:20px;}
+        .pr-card h5{margin:0 0 14px;font-size:14px;font-family:var(--lx-font-display);}
+        .pr-row{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px;}
+        .pr-sq{width:20px;height:20px;border-radius:6px;flex-shrink:0;border:1px solid rgba(0,0,0,0.08);}
+        .pr-hex{font-family:var(--lx-font-mono);color:var(--lx-text-muted);margin-left:auto;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">•</span><h2>Color Palette Reference</h2></div>
+      <p class="lx-section-desc">Ringkasan palet Primary / Secondary / Accent / Background / Text untuk seluruh 9 tema, digunakan sebagai rujukan cepat saat membangun mockup baru.</p>
+      <div class="pr-grid" id="paletteGrid"></div>
+    </section>
+
+    <!-- ============ TYPOGRAPHY PAIRING ============ -->
+    <section class="lx-section" id="typography-ref">
+      <style>
+        .tp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:10px;}
+        .tp-card{background:var(--lx-surface);border:1px solid var(--lx-border);border-radius:var(--lx-radius-m);padding:24px;}
+        .tp-card .tp-name{font-size:11.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--lx-accent);margin-bottom:10px;}
+        .tp-card .tp-fonts{font-size:12px;color:var(--lx-text-muted);margin-bottom:14px;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">•</span><h2>Typography Pairing</h2></div>
+      <p class="lx-section-desc">Contoh judul "Studio Desain & Teknologi" dalam setiap gaya tipografi tema, lengkap dengan skala ukuran H1–Caption. Prinsipnya berlaku untuk judul apa pun — nama brand, headline landing page, judul undangan, maupun label dashboard.</p>
+      <div class="tp-grid" id="typoGrid"></div>
+    </section>
+
+    <!-- ============ TREND TIMELINE ============ -->
+    <section class="lx-section" id="timeline">
+      <style>
+        .tl-wrap{margin-top:20px;overflow-x:auto;}
+        .tl-row{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid var(--lx-border);min-width:640px;}
+        .tl-row:last-child{border-bottom:none;}
+        .tl-label{font-size:13px;font-weight:600;}
+        .tl-track{position:relative;height:26px;background:var(--lx-accent-soft);border-radius:8px;overflow:hidden;}
+        .tl-bar{position:absolute;top:0;bottom:0;left:0;background:var(--lx-accent);border-radius:8px;display:flex;align-items:center;padding-left:10px;font-size:10.5px;color:#1c1a17;font-weight:700;}
+      </style>
+      <div class="lx-section-head"><span class="lx-section-num">•</span><h2>Trend Timeline (2023–2026)</h2></div>
+      <p class="lx-section-desc">Perkiraan tingkat popularitas tiap gaya desain dari tahun ke tahun, berdasarkan observasi tren studio dan permintaan klien. Panjang bar = tingkat relevansi saat ini.</p>
+      <div class="tl-wrap">
+        <div class="tl-row"><span class="tl-label">Glassmorphism</span><div class="tl-track"><div class="tl-bar" style="width:78%;">Naik stabil</div></div></div>
+        <div class="tl-row"><span class="tl-label">Neumorphism</span><div class="tl-track"><div class="tl-bar" style="width:32%;">Menurun</div></div></div>
+        <div class="tl-row"><span class="tl-label">Claymorphism</span><div class="tl-track"><div class="tl-bar" style="width:55%;">Niche stabil</div></div></div>
+        <div class="tl-row"><span class="tl-label">Bento Grid</span><div class="tl-track"><div class="tl-bar" style="width:92%;">Dominan</div></div></div>
+        <div class="tl-row"><span class="tl-label">Neobrutalism</span><div class="tl-track"><div class="tl-bar" style="width:68%;">Naik</div></div></div>
+        <div class="tl-row"><span class="tl-label">Aurora UI</span><div class="tl-track"><div class="tl-bar" style="width:85%;">Naik cepat</div></div></div>
+        <div class="tl-row"><span class="tl-label">Y2K Revival</span><div class="tl-track"><div class="tl-bar" style="width:60%;">Musiman</div></div></div>
+        <div class="tl-row"><span class="tl-label">Minimalist Modern</span><div class="tl-track"><div class="tl-bar" style="width:96%;">Evergreen</div></div></div>
+        <div class="tl-row"><span class="tl-label">Organic/Hand-drawn</span><div class="tl-track"><div class="tl-bar" style="width:70%;">Naik</div></div></div>
+      </div>
+    </section>
+
+    <div class="lx-footer">© Luxavian Studio — Design Reference Guide. Rujukan gaya desain untuk seluruh jenis proyek studio.</div>
+
+  </main>
+</div>
+
+<!-- ===================== MODAL ===================== -->
+<div class="lx-modal-overlay" id="modalOverlay">
+  <div class="lx-modal">
+    <div class="lx-modal-head">
+      <h3 id="modalTitle">CSS Snippet</h3>
+      <button class="lx-modal-close" id="modalClose">✕</button>
+    </div>
+    <pre id="modalCode"></pre>
+    <button class="lx-modal-copybtn" id="modalCopyBtn">Salin ke clipboard</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ THEME TOGGLE ============ */
+  var root = document.documentElement;
+  var themeToggle = document.getElementById('themeToggle');
+  var themeDot = document.getElementById('themeDot');
+  var themeLabel = document.getElementById('themeLabel');
+
+  function setTheme(dark){
+    if(dark){
+      root.classList.add('dark');
+      themeDot.textContent = '☀';
+      themeLabel.textContent = 'Light Mode';
+    }else{
+      root.classList.remove('dark');
+      themeDot.textContent = '☾';
+      themeLabel.textContent = 'Dark Mode';
+    }
+  }
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(prefersDark);
+  themeToggle.addEventListener('click', function(){
+    setTheme(!root.classList.contains('dark'));
+  });
+
+  /* ============ SIDEBAR MOBILE ============ */
+  var sidebar = document.getElementById('sidebar');
+  var hamburgerBtn = document.getElementById('hamburgerBtn');
+  var scrim = document.getElementById('scrim');
+
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    scrim.classList.remove('open');
+  }
+  hamburgerBtn.addEventListener('click', function(){
+    sidebar.classList.toggle('open');
+    scrim.classList.toggle('open');
+  });
+  scrim.addEventListener('click', closeSidebar);
+
+  /* ============ SMOOTH SCROLL NAV ============ */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.lx-navlink'));
+  var sections = navLinks.map(function(link){
+    return document.getElementById(link.getAttribute('data-target'));
+  });
+
+  navLinks.forEach(function(link){
+    link.addEventListener('click', function(){
+      var target = document.getElementById(link.getAttribute('data-target'));
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+      closeSidebar();
+    });
+  });
+
+  function updateActiveLink(){
+    var scrollPos = window.scrollY + 120;
+    var activeIndex = 0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i] && sections[i].offsetTop <= scrollPos){
+        activeIndex = i;
+      }
+    }
+    navLinks.forEach(function(l){ l.classList.remove('active'); });
+    if(navLinks[activeIndex]) navLinks[activeIndex].classList.add('active');
+  }
+  window.addEventListener('scroll', updateActiveLink, {passive:true});
+  updateActiveLink();
+
+  /* ============ CSS SNIPPET LIBRARY ============ */
+  var cssSnippets = {
+    glassmorphism:
+".gm-card {\n"+
+"  background: rgba(255, 255, 255, 0.10);\n"+
+"  border: 1px solid rgba(255, 255, 255, 0.25);\n"+
+"  border-radius: 20px;\n"+
+"  backdrop-filter: blur(18px);\n"+
+"  -webkit-backdrop-filter: blur(18px);\n"+
+"  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);\n"+
+"}\n\n"+
+"/* Background gradient + glow */\n"+
+".gm-stage {\n"+
+"  background: linear-gradient(135deg, #1b1035, #0e1b3d 60%, #1b1035);\n"+
+"}",
+
+    neumorphism:
+".nm-card {\n"+
+"  background: #e0e5ec;\n"+
+"  border-radius: 20px;\n"+
+"  box-shadow: 9px 9px 18px #b8bec7, -9px -9px 18px #ffffff;\n"+
+"}\n\n"+
+"/* Inset variant (pressed / sunken look) */\n"+
+".nm-inset {\n"+
+"  background: #e0e5ec;\n"+
+"  box-shadow: inset 6px 6px 12px #b8bec7, inset -6px -6px 12px #ffffff;\n"+
+"}",
+
+    claymorphism:
+".cl-card {\n"+
+"  background: #ffd6e8;\n"+
+"  border-radius: 34px;\n"+
+"  border: 3px solid #fff;\n"+
+"  box-shadow: 0 14px 0 -4px rgba(255,182,209,0.6),\n"+
+"              0 18px 30px rgba(216,120,164,0.35);\n"+
+"}",
+
+    bento:
+".bt-grid {\n"+
+"  display: grid;\n"+
+"  grid-template-columns: repeat(3, 1fr);\n"+
+"  grid-template-rows: repeat(2, 90px);\n"+
+"  gap: 14px;\n"+
+"}\n\n"+
+".bt-box.span2 { grid-column: span 2; }\n"+
+".bt-box.rowspan2 { grid-row: span 2; }",
+
+    neobrutalism:
+".nb-card {\n"+
+"  background: #fff;\n"+
+"  border: 3px solid #111;\n"+
+"  border-radius: 4px;\n"+
+"  box-shadow: 8px 8px 0 #111;\n"+
+"}\n\n"+
+".nb-btn:active {\n"+
+"  box-shadow: 2px 2px 0 #111;\n"+
+"  transform: translate(3px, 3px);\n"+
+"}",
+
+    aurora:
+".au-glow {\n"+
+"  position: absolute;\n"+
+"  border-radius: 50%;\n"+
+"  filter: blur(70px);\n"+
+"  opacity: 0.55;\n"+
+"}\n\n"+
+".au-card h5 {\n"+
+"  background: linear-gradient(90deg, #22d3a5, #8b5cf6);\n"+
+"  -webkit-background-clip: text;\n"+
+"  background-clip: text;\n"+
+"  color: transparent;\n"+
+"}",
+
+    y2k:
+".y2k-badge {\n"+
+"  border-radius: 999px;\n"+
+"  background: linear-gradient(120deg, #e8eaf0, #c6c9d4, #f5f6fa, #b9bcc7);\n"+
+"  border: 1px solid #fff;\n"+
+"  box-shadow: 0 6px 18px rgba(0,0,0,0.15),\n"+
+"              inset 0 1px 0 rgba(255,255,255,0.8);\n"+
+"}",
+
+    minimalist:
+".mm-card h5 {\n"+
+"  font-family: 'Playfair Display', serif;\n"+
+"  font-size: 28px;\n"+
+"  line-height: 1.2;\n"+
+"  color: #22261f;\n"+
+"}\n\n"+
+".mm-line {\n"+
+"  width: 40px;\n"+
+"  height: 2px;\n"+
+"  background: #7a8a76;\n"+
+"}",
+
+    organic:
+"/* Hand-drawn border via inline SVG path */\n"+
+"<svg viewBox=\"0 0 300 220\">\n"+
+"  <path d=\"M8,14 C4,60 14,140 6,206 C90,214 220,210 292,204\n"+
+"           C298,140 290,50 294,10 C210,4 90,8 8,14 Z\"\n"+
+"        fill=\"none\" stroke=\"#7a3f2b\" stroke-width=\"2.5\" />\n"+
+"</svg>"
+  };
+
+  /* ============ MODAL ============ */
+  var modalOverlay = document.getElementById('modalOverlay');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalCode = document.getElementById('modalCode');
+  var modalClose = document.getElementById('modalClose');
+  var modalCopyBtn = document.getElementById('modalCopyBtn');
+
+  document.querySelectorAll('[data-modal-code]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.getAttribute('data-modal-code');
+      var title = btn.getAttribute('data-modal-title') || 'CSS Snippet';
+      modalTitle.textContent = title;
+      modalCode.textContent = cssSnippets[key] || '/* Snippet tidak ditemukan */';
+      modalOverlay.classList.add('open');
+    });
+  });
+
+  function closeModal(){ modalOverlay.classList.remove('open'); }
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', function(e){
+    if(e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeModal();
+  });
+
+  modalCopyBtn.addEventListener('click', function(){
+    var text = modalCode.textContent;
+    var original = modalCopyBtn.textContent;
+    function done(){
+      modalCopyBtn.textContent = 'Tersalin ✓';
+      setTimeout(function(){ modalCopyBtn.textContent = original; }, 1600);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  function fallbackCopy(text, cb){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    if(cb) cb();
+  }
+
+  /* ============ COLOR PALETTE REFERENCE (generated) ============ */
+  var paletteData = [
+    {name:'Glassmorphism', colors:[
+      {label:'Background', hex:'#1B1035'},
+      {label:'Secondary', hex:'#0E1B3D'},
+      {label:'Accent', hex:'#7C5CFF'},
+      {label:'Text', hex:'#FFFFFF'}
+    ]},
+    {name:'Neumorphism', colors:[
+      {label:'Background', hex:'#E0E5EC'},
+      {label:'Shadow Dark', hex:'#B8BEC7'},
+      {label:'Shadow Light', hex:'#FFFFFF'},
+      {label:'Text', hex:'#3A3F47'}
+    ]},
+    {name:'Claymorphism', colors:[
+      {label:'Background', hex:'#FDF3F8'},
+      {label:'Primary', hex:'#FFD6E8'},
+      {label:'Accent', hex:'#C9F5DF'},
+      {label:'Text', hex:'#7A3B58'}
+    ]},
+    {name:'Bento Grid', colors:[
+      {label:'Background', hex:'#F4F3F0'},
+      {label:'Card', hex:'#FFFFFF'},
+      {label:'Accent Box', hex:'#1C1A17'},
+      {label:'Accent Text', hex:'#E0B96B'}
+    ]},
+    {name:'Neobrutalism', colors:[
+      {label:'Background', hex:'#FFF200'},
+      {label:'Border/Text', hex:'#111111'},
+      {label:'Accent', hex:'#FF5B5B'},
+      {label:'Card BG', hex:'#FFFFFF'}
+    ]},
+    {name:'Aurora UI', colors:[
+      {label:'Background', hex:'#0B0D12'},
+      {label:'Glow 1', hex:'#22D3A5'},
+      {label:'Glow 2', hex:'#8B5CF6'},
+      {label:'Glow 3', hex:'#22C9D3'}
+    ]},
+    {name:'Y2K Revival', colors:[
+      {label:'Chrome', hex:'#C6C9D4'},
+      {label:'Hot Pink', hex:'#FF2EC4'},
+      {label:'Electric Blue', hex:'#2EC4FF'},
+      {label:'Lime', hex:'#CAFF2E'}
+    ]},
+    {name:'Minimalist Modern', colors:[
+      {label:'Background', hex:'#FAF9F6'},
+      {label:'Accent (Sage)', hex:'#7A8A76'},
+      {label:'Text', hex:'#22261F'},
+      {label:'Divider', hex:'#E5E3DC'}
+    ]},
+    {name:'Organic / Hand-drawn', colors:[
+      {label:'Background', hex:'#F6EFE4'},
+      {label:'Terracotta', hex:'#7A3F2B'},
+      {label:'Forest Green', hex:'#3F5C3F'},
+      {label:'Cream', hex:'#FFFAF1'}
+    ]}
+  ];
+
+  var paletteGrid = document.getElementById('paletteGrid');
+  paletteData.forEach(function(theme){
+    var card = document.createElement('div');
+    card.className = 'pr-card';
+    var html = '<h5>' + theme.name + '</h5>';
+    theme.colors.forEach(function(c){
+      html += '<div class="pr-row"><span class="pr-sq" style="background:' + c.hex + ';"></span>' +
+              '<span>' + c.label + '</span><span class="pr-hex">' + c.hex + '</span></div>';
+    });
+    card.innerHTML = html;
+    paletteGrid.appendChild(card);
+  });
+
+  /* ============ TYPOGRAPHY PAIRING (generated) ============ */
+  var typoData = [
+    {name:'Glassmorphism', heading:"'Space Grotesk', sans-serif", body:"'Inter', sans-serif", weight:'600'},
+    {name:'Neumorphism', heading:"'Inter', sans-serif", body:"'Inter', sans-serif", weight:'700'},
+    {name:'Claymorphism', heading:"'Syne', sans-serif", body:"'Inter', sans-serif", weight:'700'},
+    {name:'Bento Grid', heading:"'Space Grotesk', sans-serif", body:"'Inter', sans-serif", weight:'700'},
+    {name:'Neobrutalism', heading:"'Syne', sans-serif", body:"'Inter', sans-serif", weight:'800'},
+    {name:'Aurora UI', heading:"'Syne', sans-serif", body:"'Inter', sans-serif", weight:'700'},
+    {name:'Y2K Revival', heading:"'Space Grotesk', sans-serif", body:"'Inter', sans-serif", weight:'700'},
+    {name:'Minimalist Modern', heading:"'Playfair Display', serif", body:"'Inter', sans-serif", weight:'500'},
+    {name:'Organic / Hand-drawn', heading:"'DM Serif Display', serif", body:"'Inter', sans-serif", weight:'400'}
+  ];
+
+  var typoGrid = document.getElementById('typoGrid');
+  typoData.forEach(function(t){
+    var card = document.createElement('div');
+    card.className = 'tp-card';
+    card.innerHTML =
+      '<div class="tp-name">' + t.name + '</div>' +
+      '<div class="tp-fonts">Heading: ' + t.heading.split(',')[0].replace(/'/g,'') +
+      ' · Body: ' + t.body.split(',')[0].replace(/'/g,'') + '</div>' +
+      '<div class="lx-font-preview">' +
+        '<div class="headline" style="font-family:' + t.heading + '; font-weight:' + t.weight + ';">Studio Desain &amp; Teknologi</div>' +
+        '<div class="meta" style="font-family:' + t.body + ';">Contoh judul dalam pasangan font tema ini.</div>' +
+      '</div>' +
+      '<div style="margin-top:16px;">' +
+        scaleRow('H1', '28px', t.heading, t.weight) +
+        scaleRow('H2', '22px', t.heading, t.weight) +
+        scaleRow('H3', '18px', t.heading, t.weight) +
+        scaleRow('Body', '14px', t.body, '400') +
+        scaleRow('Caption', '11px', t.body, '400') +
+      '</div>';
+    typoGrid.appendChild(card);
+  });
+
+  function scaleRow(tag, size, font, weight){
+    return '<div class="lx-scale-row">' +
+      '<span class="lx-scale-tag">' + tag + '</span>' +
+      '<span style="font-family:' + font + '; font-size:' + size + '; font-weight:' + weight + ';">Aa Contoh Teks</span>' +
+      '</div>';
+  }
+
+})();
+</script>
+
+</body>
+</html>
