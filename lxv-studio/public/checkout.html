@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Luxavian Studio (Prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0c;
+  --surface:#131316;
+  --surface-2:#1a1a1e;
+  --border:#26262b;
+  --text:#f5f5f7;
+  --text-muted:#8a8a92;
+  --pink:#ff1f6d;
+  --pink-soft:#2a0f1c;
+  --green:#22c55e;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:640px;margin:0 auto;padding:56px 24px 100px;}
+
+/* ---- Progress recap ---- */
+.recap{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:32px;
+  font-size:13px;
+  color:var(--text-muted);
+}
+.recap strong{color:var(--text);font-weight:600;}
+
+.eyebrow{
+  color:var(--pink);
+  font-weight:700;
+  font-size:12.5px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  margin:0 0 12px;
+}
+h1{
+  font-family:var(--font-display);
+  font-size:clamp(28px,4vw,36px);
+  font-weight:700;
+  margin:0 0 10px;
+  line-height:1.15;
+}
+.sub{
+  color:var(--text-muted);
+  font-size:15px;
+  line-height:1.6;
+  margin:0 0 36px;
+}
+
+/* ---- Order summary ---- */
+.summary{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px 24px;
+  margin-bottom:28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.summary .plan-name{font-weight:700;font-size:16px;margin:0 0 4px;}
+.summary .plan-detail{color:var(--text-muted);font-size:13px;margin:0;}
+.summary .plan-price{font-family:var(--font-display);font-size:22px;font-weight:700;text-align:right;}
+.summary .plan-price small{display:block;font-family:var(--font-body);font-weight:400;font-size:11.5px;color:var(--text-muted);}
+
+/* ---- Method tabs ---- */
+.methods{display:flex;gap:10px;margin-bottom:24px;}
+.method-btn{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  color:var(--text-muted);
+  font-weight:600;
+  font-size:13.5px;
+  cursor:pointer;
+  text-align:center;
+  transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+.method-btn.active{
+  border-color:var(--pink);
+  color:var(--text);
+  background:var(--pink-soft);
+}
+
+/* ---- Panels ---- */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:32px 28px;
+  display:none;
+}
+.panel.active{display:block;}
+
+/* QRIS panel */
+.qris-box{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+}
+.qr-frame{
+  width:220px;height:220px;
+  background:#fff;
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+}
+.qr-frame svg{width:180px;height:180px;}
+.qr-frame.paid{
+  background:var(--surface-2);
+}
+.qr-timer{
+  font-family:var(--font-display);
+  font-size:13px;
+  color:var(--text-muted);
+  margin-bottom:4px;
+}
+.qr-amount{
+  font-family:var(--font-display);
+  font-size:26px;
+  font-weight:700;
+  margin:6px 0 18px;
+}
+.qr-hint{
+  font-size:13px;
+  color:var(--text-muted);
+  max-width:340px;
+  line-height:1.6;
+  margin-bottom:22px;
+}
+.qr-methods{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;justify-content:center;}
+.qr-methods span{
+  font-size:11px;
+  border:1px solid var(--border);
+  padding:5px 10px;
+  border-radius:999px;
+  color:var(--text-muted);
+}
+.btn-primary{
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:14px 28px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  width:100%;
+  transition:opacity .15s ease;
+}
+.btn-primary:hover{opacity:0.9;}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-secondary{
+  background:transparent;
+  color:var(--text-muted);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 20px;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  margin-top:12px;
+  width:100%;
+}
+.status-line{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--text-muted);
+  margin-top:16px;
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);animation:pulse 1.4s infinite ease-in-out;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.status-line.success .status-dot{background:var(--green);animation:none;}
+
+/* Kupon panel */
+.coupon-field{
+  display:flex;gap:10px;margin-bottom:6px;
+}
+.coupon-field input{
+  flex:1;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  color:var(--text);
+  font-size:14px;
+  font-family:var(--font-body);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.coupon-field input:focus{outline:none;border-color:var(--pink);}
+.coupon-field button{
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:0 22px;
+  font-weight:700;
+  font-size:13.5px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.coupon-field button:disabled{opacity:0.5;cursor:not-allowed;}
+.coupon-msg{
+  font-size:13px;
+  margin:14px 0 0;
+  padding:12px 14px;
+  border-radius:10px;
+  display:none;
+}
+.coupon-msg.show{display:block;}
+.coupon-msg.error{background:#2a1214;color:#ff8a95;border:1px solid #4a1c22;}
+.coupon-msg.success{background:#0f2318;color:#7ee2a8;border:1px solid #1e4a30;}
+.coupon-hint{font-size:12px;color:var(--text-muted);margin-top:18px;line-height:1.6;}
+
+.foot-note{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-muted);
+  margin-top:28px;
+  line-height:1.6;
+}
+
+/* ---- Dashboard mock (shown after success) ---- */
+.dashboard{display:none;}
+.dashboard.active{display:block;}
+.dash-topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:40px;
+}
+.dash-brand{font-family:var(--font-display);font-weight:700;font-size:18px;}
+.dash-brand span{color:var(--pink);}
+.dash-badge{
+  font-size:11.5px;
+  background:var(--pink-soft);
+  color:var(--pink);
+  border:1px solid rgba(255,31,109,0.3);
+  padding:5px 12px;
+  border-radius:999px;
+  font-weight:600;
+}
+.dash-hero{margin-bottom:32px;}
+.dash-hero h1{margin-bottom:8px;}
+.dash-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:16px;
+}
+.dash-card h4{margin:0 0 6px;font-size:14px;}
+.dash-card p{margin:0;color:var(--text-muted);font-size:13px;line-height:1.6;}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:520px){.dash-grid{grid-template-columns:1fr;}}
+.dash-step{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+.dash-step:last-child{border-bottom:none;}
+.dash-step .dot{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--surface-2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--text-muted);flex-shrink:0;margin-top:1px;
+}
+.dash-step.done .dot{background:var(--green);border-color:var(--green);color:#0a0a0c;}
+.dash-step-title{font-weight:600;font-size:13.5px;margin:0 0 2px;}
+.dash-step-desc{font-size:12.5px;color:var(--text-muted);margin:0;}
+
+/* ---- Pilih Gaya Desain step ---- */
+.style-intro{
+  font-size:12px;
+  color:var(--text-muted);
+  margin:-24px 0 26px;
+  line-height:1.6;
+}
+.style-intro a{color:var(--pink);text-decoration:none;font-weight:600;}
+.style-intro a:hover{text-decoration:underline;}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+@media(max-width:560px){.style-grid{grid-template-columns:1fr;}}
+.style-card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px 18px 16px;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease, transform .15s ease;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.style-card:hover{border-color:#3a3a42;transform:translateY(-2px);}
+.style-card.selected{border-color:var(--pink);background:var(--pink-soft);}
+.style-card .style-radio{
+  position:absolute;top:16px;right:16px;
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--border);
+  transition:border-color .15s ease, background .15s ease;
+}
+.style-card.selected .style-radio{border-color:var(--pink);background:var(--pink);box-shadow:inset 0 0 0 3px var(--surface);}
+.style-card .style-name{font-weight:700;font-size:15px;margin:0;padding-right:28px;line-height:1.25;}
+.style-card .style-desc{font-size:12.5px;color:var(--text-muted);line-height:1.55;margin:0;}
+.style-badge{
+  align-self:flex-start;
+  font-size:10.5px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  line-height:1.3;
+}
+.style-badge.match{
+  border-color:rgba(255,31,109,0.4);
+  background:var(--pink-soft);
+  color:var(--pink);
+}
+.style-ref{
+  font-size:12px;
+  font-weight:600;
+  color:var(--pink);
+  text-decoration:none;
+  margin-top:2px;
+}
+.style-ref:hover{text-decoration:underline;}
+.style-card.unsure{grid-column:1 / -1;flex-direction:row;align-items:center;gap:14px;}
+.style-card.unsure .style-emoji{font-size:22px;flex-shrink:0;}
+.style-card.unsure .style-name{padding-right:0;}
+</style>
+</head>
+<body>
+
+<!-- ===== PILIH GAYA DESAIN (step baru sebelum pembayaran) ===== -->
+<div class="wrap" id="styleView">
+  <div class="recap">
+    <span>Ringkasan sebelumnya: <strong id="styleRecap">UMKM · Toko Online · 2–4 minggu</strong></span>
+    <span>Langkah 7 dari 8</span>
+  </div>
+
+  <p class="eyebrow">Gaya Desain</p>
+  <h1>Pilih gaya desain proyek Anda</h1>
+  <p class="sub">Tentukan arah visual yang paling mewakili merek Anda. Gaya ini menjadi acuan tim saat merancang deliverable Anda — baik itu website company profile, landing page, undangan digital, portofolio, maupun dashboard internal. Anda tetap bisa menyesuaikannya bersama tim nanti.</p>
+
+  <p class="style-intro">Butuh gambaran tiap gaya? Buka <a href="design-guide.html" target="_blank" rel="noopener">panduan referensi desain lengkap →</a></p>
+
+  <div class="style-grid" id="styleGrid"></div>
+
+  <button class="btn-primary" id="styleContinueBtn" onclick="continueFromStyle()" disabled>Lanjut ke pembayaran</button>
+  <p class="foot-note" style="margin-top:16px;">Pilihan gaya ini ikut tersimpan sebagai bagian dari data pemesanan Anda dan akan tampil di ringkasan pembayaran serta dashboard proyek.</p>
+</div>
+
+<div class="wrap" id="checkoutView" style="display:none;">
+  <div class="recap">
+    <span>Ringkasan sebelumnya: <strong id="checkoutRecap">UMKM · Toko Online · 2–4 minggu</strong></span>
+    <span>Langkah 8 dari 8</span>
+  </div>
+
+  <p class="eyebrow">Pembayaran</p>
+  <h1>Selesaikan pemesanan Anda</h1>
+  <p class="sub">Pilih cara pembayaran di bawah. Setelah pembayaran terkonfirmasi, Anda akan langsung masuk ke dashboard proyek.</p>
+
+  <div class="summary">
+    <div>
+      <p class="plan-name">Community & Foundation</p>
+      <p class="plan-detail">Uang muka pemesanan</p>
+      <p class="plan-detail" id="summaryStyle" style="margin-top:4px;color:var(--pink);">Gaya desain: —</p>
+    </div>
+    <div class="plan-price">Rp1.000.000<small>DP 50% dari Rp2.000.000</small></div>
+  </div>
+
+  <div class="methods">
+    <button class="method-btn active" id="tabQris" onclick="switchTab('qris')">Bayar dengan QRIS</button>
+    <button class="method-btn" id="tabCoupon" onclick="switchTab('coupon')">Punya kode kupon?</button>
+  </div>
+
+  <!-- ===== QRIS PANEL ===== -->
+  <div class="panel active" id="panelQris">
+    <div class="qris-box">
+      <p class="qr-hint" style="margin-bottom:8px;">Scan dengan aplikasi e-wallet atau m-banking apa saja yang mendukung QRIS.</p>
+      <div class="qr-frame" id="qrFrame">
+        <svg viewBox="0 0 100 100" id="qrSvg">
+          <rect width="100" height="100" fill="#fff"/>
+          <g fill="#0a0a0c">
+            <rect x="6" y="6" width="24" height="24"/><rect x="12" y="12" width="12" height="12" fill="#fff"/>
+            <rect x="70" y="6" width="24" height="24"/><rect x="76" y="12" width="12" height="12" fill="#fff"/>
+            <rect x="6" y="70" width="24" height="24"/><rect x="12" y="76" width="12" height="12" fill="#fff"/>
+            <rect x="40" y="10" width="6" height="6"/><rect x="52" y="10" width="6" height="6"/>
+            <rect x="40" y="22" width="6" height="6"/><rect x="58" y="22" width="6" height="6"/>
+            <rect x="40" y="40" width="6" height="6"/><rect x="52" y="40" width="6" height="6"/><rect x="64" y="40" width="6" height="6"/>
+            <rect x="34" y="52" width="6" height="6"/><rect x="46" y="52" width="6" height="6"/><rect x="70" y="52" width="6" height="6"/>
+            <rect x="40" y="64" width="6" height="6"/><rect x="58" y="64" width="6" height="6"/><rect x="82" y="64" width="6" height="6"/>
+            <rect x="40" y="76" width="6" height="6"/><rect x="52" y="82" width="6" height="6"/><rect x="64" y="76" width="6" height="6"/>
+            <rect x="82" y="82" width="10" height="10"/>
+          </g>
+        </svg>
+      </div>
+      <p class="qr-timer" id="qrTimer">Berlaku 14:32</p>
+      <p class="qr-amount">Rp1.000.000</p>
+      <div class="qr-methods">
+        <span>GoPay</span><span>OVO</span><span>DANA</span><span>ShopeePay</span><span>Mobile Banking</span>
+      </div>
+
+      <button class="btn-primary" id="qrPayBtn" onclick="simulatePayment()">Simulasikan pembayaran diterima</button>
+      <p class="status-line" id="qrStatus"><span class="status-dot"></span> Menunggu pembayaran…</p>
+
+      <p class="foot-note" style="margin-top:24px;">Prototype ini mensimulasikan pemindaian QRIS. Pada versi produksi, status akan diperbarui otomatis lewat notifikasi payment gateway (mis. Midtrans/Xendit), tanpa perlu tombol ini.</p>
+    </div>
+  </div>
+
+  <!-- ===== KUPON PANEL ===== -->
+  <div class="panel" id="panelCoupon">
+    <p style="margin:0 0 16px;font-size:14px;color:var(--text-muted);line-height:1.6;">
+      Masukkan kode akses dari partner atau referral. Kode yang valid akan membebaskan biaya DP dan langsung membuka dashboard proyek Anda.
+    </p>
+    <div class="coupon-field">
+      <input type="text" id="couponInput" placeholder="Contoh: PARTNER2026" maxlength="24" autocomplete="off">
+      <button id="couponBtn" onclick="checkCoupon()">Terapkan</button>
+    </div>
+    <div class="coupon-msg" id="couponMsg"></div>
+    <p class="coupon-hint">Coba kode <strong>PARTNER2026</strong> untuk melihat simulasi akses gratis.</p>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD (muncul setelah sukses) ===== -->
+<div class="wrap dashboard" id="dashboardView">
+  <div class="dash-topbar">
+    <div class="dash-brand">Luxavian <span>Studio</span></div>
+    <div class="dash-badge" id="dashBadge">Pembayaran diterima</div>
+  </div>
+
+  <div class="dash-hero">
+    <p class="eyebrow">Dashboard Proyek</p>
+    <h1>Selamat datang, mari mulai.</h1>
+    <p class="sub" id="dashSub">Pembayaran DP Anda sudah kami terima. Tim kami akan menghubungi Anda dalam 1x24 jam kerja untuk memulai brief lebih lanjut.</p>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card">
+      <h4>Paket</h4>
+      <p id="dashPlan">Community & Foundation</p>
+    </div>
+    <div class="dash-card">
+      <h4>Status pembayaran</h4>
+      <p id="dashPayStatus">Lunas (DP 50%)</p>
+    </div>
+    <div class="dash-card">
+      <h4>Gaya desain</h4>
+      <p id="dashStyle">—</p>
+    </div>
+    <div class="dash-card">
+      <h4>Jenis bisnis</h4>
+      <p id="dashBusiness">UMKM · Toko Online</p>
+    </div>
+  </div>
+
+  <div class="dash-card" style="margin-top:4px;">
+    <h4 style="margin-bottom:12px;">Progres proyek</h4>
+    <div class="dash-step done">
+      <div class="dot">✓</div>
+      <div><p class="dash-step-title">Pemesanan & pembayaran</p><p class="dash-step-desc">Selesai hari ini</p></div>
+    </div>
+    <div class="dash-step">
+      <div class="dot">2</div>
+      <div><p class="dash-step-title">Diskusi brief dengan tim</p><p class="dash-step-desc">Dijadwalkan setelah konfirmasi</p></div>
+    </div>
+    <div class="dash-step">
+      <div class="dot">3</div>
+      <div><p class="dash-step-title">Draf desain pertama</p><p class="dash-step-desc">Menunggu tahap sebelumnya</p></div>
+    </div>
+    <div class="dash-step">
+      <div class="dot">4</div>
+      <div><p class="dash-step-title">Revisi & peluncuran</p><p class="dash-step-desc">Menunggu tahap sebelumnya</p></div>
+    </div>
+  </div>
+
+  <p class="foot-note">Ini adalah tampilan dashboard contoh (prototype). Data proyek sesungguhnya akan diisi otomatis dari alur pemesanan.</p>
+</div>
+
+<script>
+/* =========================================================
+   PILIH GAYA DESAIN
+   ---------------------------------------------------------
+   Data pemesanan yang dibawa dari langkah sebelumnya. Pada
+   versi produksi, nilai ini diisi dari state pemesanan
+   (paket + jenis bisnis yang dipilih klien). Di prototype
+   ini kita hardcode contoh "UMKM".
+   ========================================================= */
+var order = {
+  businessSegment: 'umkm',            // umkm | organisasi | profesional | acara | pendidikan
+  businessLabel: 'UMKM · Toko Online',
+  timelineLabel: '2–4 minggu',
+  designStyleId: null,
+  designStyleName: null,
+};
+
+/* 9 gaya desain + opsi "belum yakin". Deskripsi sengaja general
+   (tidak spesifik ke undangan) agar berlaku untuk semua deliverable.
+   `anchor` mengarah ke section id yang ada di design-guide.html.
+   `badge` = jenis proyek yang paling cocok. `segments` = segmen
+   bisnis yang paling diuntungkan (dipakai untuk mengurutkan &
+   menandai kartu yang cocok dengan bisnis klien). */
+var DESIGN_STYLES = [
+  { id:'glassmorphism', name:'Glassmorphism', anchor:'glassmorphism',
+    desc:'Efek kaca buram semi-transparan dengan blur, memberi kesan modern, ringan, dan premium.',
+    badge:'Landing page & produk digital', segments:['profesional','umkm'] },
+  { id:'neumorphism', name:'Neumorphism (Soft UI)', anchor:'neumorphism',
+    desc:'Elemen lembut yang tampak timbul-tenggelam dari background, terasa tenang dan tactile.',
+    badge:'Dashboard & aplikasi internal', segments:['profesional','pendidikan'] },
+  { id:'claymorphism', name:'Claymorphism', anchor:'claymorphism',
+    desc:'Bentuk 3D membulat playful seperti tanah liat, ceria, ramah, dan approachable.',
+    badge:'UMKM & brand yang fun', segments:['umkm','acara'] },
+  { id:'bento', name:'Bento Grid', anchor:'bento',
+    desc:'Layout kotak modular yang rapi untuk menampilkan banyak konten sekaligus dalam satu pandangan.',
+    badge:'Company profile & portofolio', segments:['profesional','organisasi','umkm'] },
+  { id:'neobrutalism', name:'Neobrutalism', anchor:'neobrutalism',
+    desc:'Border tebal, shadow solid, dan warna kontras tinggi — berani, jujur, dan mudah diingat.',
+    badge:'Brand kreatif & kampanye', segments:['acara','umkm'] },
+  { id:'aurora', name:'Aurora UI / Dark Gradient', anchor:'aurora',
+    desc:'Latar gelap dengan glow gradasi warna yang mengambang, terasa mewah dan sinematik.',
+    badge:'Produk premium & peluncuran', segments:['profesional','acara'] },
+  { id:'y2k', name:'Y2K Revival', anchor:'y2k',
+    desc:'Gradasi krom metalik dan neon retro-futuristik ala 2000-an, playful dan eye-catching.',
+    badge:'Fashion, musik & audiens muda', segments:['acara','umkm'] },
+  { id:'minimalist', name:'Minimalist Modern (Clean)', anchor:'minimalist',
+    desc:'Whitespace lega dan tipografi kuat dengan satu warna aksen — elegan dan timeless.',
+    badge:'Company profile & brand premium', segments:['organisasi','profesional','pendidikan'] },
+  { id:'organic', name:'Organic / Hand-drawn', anchor:'organic',
+    desc:'Sentuhan sketsa tangan dan tone earthy yang hangat, personal, dan otentik.',
+    badge:'UMKM lokal & komunitas', segments:['umkm','organisasi'] },
+];
+
+var UNSURE = { id:'undecided', name:'Belum yakin — minta rekomendasi tim' };
+
+function segmentLabel(seg){
+  return ({umkm:'UMKM',organisasi:'organisasi',profesional:'profesional',
+           acara:'acara & event',pendidikan:'institusi pendidikan'})[seg] || seg;
+}
+
+function renderStyleGrid(){
+  var grid = document.getElementById('styleGrid');
+  if(!grid) return;
+  document.getElementById('styleRecap').textContent =
+    order.businessLabel + ' · ' + order.timelineLabel;
+  document.getElementById('checkoutRecap').textContent =
+    order.businessLabel + ' · ' + order.timelineLabel;
+
+  // Urutkan: gaya yang cocok dengan segmen bisnis klien tampil lebih dulu.
+  var seg = order.businessSegment;
+  var sorted = DESIGN_STYLES.slice().sort(function(a,b){
+    var am = a.segments.indexOf(seg) !== -1 ? 0 : 1;
+    var bm = b.segments.indexOf(seg) !== -1 ? 0 : 1;
+    return am - bm;
+  });
+
+  grid.innerHTML = '';
+  sorted.forEach(function(s){
+    var match = s.segments.indexOf(seg) !== -1;
+    var card = document.createElement('div');
+    card.className = 'style-card';
+    card.setAttribute('data-id', s.id);
+    card.innerHTML =
+      '<span class="style-radio"></span>' +
+      '<p class="style-name">' + s.name + '</p>' +
+      '<p class="style-desc">' + s.desc + '</p>' +
+      '<span class="style-badge' + (match ? ' match' : '') + '">' +
+        (match ? '★ Cocok untuk bisnis Anda (' + segmentLabel(seg) + ')' : 'Cocok untuk: ' + s.badge) +
+      '</span>' +
+      '<a class="style-ref" href="design-guide.html#' + s.anchor + '" target="_blank" rel="noopener">Lihat referensi lengkap →</a>';
+    card.addEventListener('click', function(e){
+      if(e.target.classList.contains('style-ref')) return; // biarkan link bekerja
+      selectStyle(s.id, s.name);
+    });
+    grid.appendChild(card);
+  });
+
+  // Opsi "belum yakin / minta rekomendasi tim"
+  var unsure = document.createElement('div');
+  unsure.className = 'style-card unsure';
+  unsure.setAttribute('data-id', UNSURE.id);
+  unsure.innerHTML =
+    '<span class="style-emoji">🤝</span>' +
+    '<div>' +
+      '<p class="style-name">' + UNSURE.name + '</p>' +
+      '<p class="style-desc">Belum menentukan gaya? Biarkan tim kami merekomendasikan yang paling pas berdasarkan brief Anda.</p>' +
+    '</div>' +
+    '<span class="style-radio"></span>';
+  unsure.addEventListener('click', function(){ selectStyle(UNSURE.id, UNSURE.name); });
+  grid.appendChild(unsure);
+}
+
+function selectStyle(id, name){
+  order.designStyleId = id;
+  order.designStyleName = name;
+  var cards = document.querySelectorAll('#styleGrid .style-card');
+  cards.forEach(function(c){
+    c.classList.toggle('selected', c.getAttribute('data-id') === id);
+  });
+  document.getElementById('styleContinueBtn').disabled = false;
+}
+
+function continueFromStyle(){
+  if(!order.designStyleId) return;
+  // Teruskan pilihan gaya ke ringkasan pembayaran.
+  document.getElementById('summaryStyle').textContent = 'Gaya desain: ' + order.designStyleName;
+  document.getElementById('styleView').style.display = 'none';
+  document.getElementById('checkoutView').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderStyleGrid();
+
+function switchTab(tab){
+  document.getElementById('tabQris').classList.toggle('active', tab==='qris');
+  document.getElementById('tabCoupon').classList.toggle('active', tab==='coupon');
+  document.getElementById('panelQris').classList.toggle('active', tab==='qris');
+  document.getElementById('panelCoupon').classList.toggle('active', tab==='coupon');
+}
+
+function goToDashboard(mode){
+  document.getElementById('checkoutView').style.display = 'none';
+  var dash = document.getElementById('dashboardView');
+  dash.classList.add('active');
+  // Bawa detail proyek (gaya desain + jenis bisnis) ke dashboard.
+  document.getElementById('dashStyle').textContent = order.designStyleName || 'Ditentukan bersama tim';
+  document.getElementById('dashBusiness').textContent = order.businessLabel;
+  if(mode === 'coupon'){
+    document.getElementById('dashBadge').textContent = 'Akses gratis via kupon';
+    document.getElementById('dashSub').textContent = 'Kode kupon Anda valid — biaya DP dibebaskan sepenuhnya. Tim kami akan menghubungi Anda dalam 1x24 jam kerja untuk memulai brief lebih lanjut.';
+    document.getElementById('dashPayStatus').textContent = 'Dibebaskan (kupon PARTNER2026)';
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function simulatePayment(){
+  var btn = document.getElementById('qrPayBtn');
+  var status = document.getElementById('qrStatus');
+  var frame = document.getElementById('qrFrame');
+  btn.disabled = true;
+  btn.textContent = 'Memeriksa pembayaran…';
+  status.innerHTML = '<span class="status-dot"></span> Mengonfirmasi ke bank/e-wallet…';
+
+  setTimeout(function(){
+    frame.classList.add('paid');
+    status.classList.add('success');
+    status.innerHTML = '✓ Pembayaran diterima';
+    btn.textContent = 'Lanjut ke dashboard';
+    btn.disabled = false;
+    btn.onclick = function(){ goToDashboard('qris'); };
+  }, 1600);
+}
+
+function checkCoupon(){
+  var input = document.getElementById('couponInput');
+  var msg = document.getElementById('couponMsg');
+  var code = input.value.trim().toUpperCase();
+
+  if(code === ''){
+    msg.className = 'coupon-msg show error';
+    msg.textContent = 'Masukkan kode kupon terlebih dahulu.';
+    return;
+  }
+
+  if(code === 'PARTNER2026'){
+    msg.className = 'coupon-msg show success';
+    msg.textContent = '✓ Kode valid. Biaya DP dibebaskan — mengarahkan ke dashboard…';
+    document.getElementById('couponBtn').disabled = true;
+    setTimeout(function(){ goToDashboard('coupon'); }, 1200);
+  } else {
+    msg.className = 'coupon-msg show error';
+    msg.textContent = 'Kode tidak ditemukan atau sudah kedaluwarsa. Periksa kembali penulisannya.';
+  }
+}
+
+document.getElementById('couponInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkCoupon();
+});
+</script>
+
+</body>
+</html>
