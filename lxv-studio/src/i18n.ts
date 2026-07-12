@@ -6,6 +6,7 @@ const resources = {
   en: {
     translation: {
       nav: {
+        home: "Home",
         about: "About",
         services: "Services",
         portfolio: "Portfolio",
@@ -175,7 +176,12 @@ const resources = {
         title: "Our Work",
         desc: "Real projects we have crafted for our clients.",
         visit: "Visit Website",
-        label: "Selected Work"
+        label: "Selected Work",
+        viewCategory: "View Portfolio",
+        projectsSuffix: "Projects",
+        preview: "Preview",
+        detail: "Detail",
+        liveDemo: "Live Demo"
       },
       results: {
         stats: [
@@ -272,6 +278,7 @@ const resources = {
   id: {
     translation: {
       nav: {
+        home: "Beranda",
         about: "Tentang",
         services: "Layanan",
         portfolio: "Portofolio",
@@ -441,7 +448,12 @@ const resources = {
         title: "Portofolio",
         desc: "Proyek nyata yang telah kami kerjakan untuk klien kami.",
         visit: "Kunjungi Website",
-        label: "Karya Pilihan"
+        label: "Karya Pilihan",
+        viewCategory: "Lihat Portfolio",
+        projectsSuffix: "Proyek",
+        preview: "Preview",
+        detail: "Detail",
+        liveDemo: "Live Demo"
       },
       results: {
         stats: [
@@ -538,6 +550,7 @@ const resources = {
   zh: {
     translation: {
       nav: {
+        home: "首页",
         about: "关于",
         services: "服务",
         portfolio: "作品集",
@@ -707,7 +720,12 @@ const resources = {
         title: "我们的作品",
         desc: "我们为客户打造的真实项目。",
         visit: "访问网站",
-        label: "精选作品"
+        label: "精选作品",
+        viewCategory: "查看作品集",
+        projectsSuffix: "个项目",
+        preview: "预览",
+        detail: "详情",
+        liveDemo: "在线演示"
       },
       results: {
         stats: [
