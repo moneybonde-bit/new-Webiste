@@ -34,15 +34,29 @@ export function Hero() {
   return (
     <section ref={ref} id="home" className="relative h-[160vh]" aria-labelledby="hero-heading">
       <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-24 overflow-hidden">
-        {/* Cinematic backdrop: vignette + off-center glows */}
+        {/* Cinematic backdrop: fullscreen looping video, fading out on scroll */}
         <motion.div
           style={{ opacity: backgroundOpacity }}
           className="absolute inset-0 w-full h-full bg-background -z-10"
           aria-hidden="true"
         >
-          <div className="glow-blob hidden md:block absolute -top-32 right-[8%] w-[560px] h-[560px] bg-neon-purple/15 blur-[140px]" />
-          <div className="glow-blob hidden md:block absolute bottom-[12%] -left-24 w-[480px] h-[480px] bg-neon-pink/12 blur-[130px]" />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          >
+            <source
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+              type="video/mp4"
+            />
+          </video>
+          {/* Legibility scrim: keeps oversized type readable over bright frames */}
+          <div className="absolute inset-0 bg-black/45" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,#0A0A0A_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
         </motion.div>
 
         {/* Ghost display word drifting on its own parallax layer */}
