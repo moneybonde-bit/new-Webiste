@@ -1,4 +1,5 @@
-import React, { lazy } from "react";
+import React, { lazy, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Hero } from "../sections/Hero";
 import { WhyChooseUs } from "../sections/WhyChooseUs";
@@ -36,6 +37,28 @@ const FloatingWhatsApp = lazy(() =>
 
 /** The single-page marketing landing (scroll sections). */
 export function HomePage() {
+  const { hash } = useLocation();
+
+  // Support /#section links from other routes. Sections mount lazily as the
+  // viewport approaches them, so scroll down in steps until the target exists.
+  useEffect(() => {
+    const target = hash.slice(1);
+    if (!target) return;
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      const el = document.getElementById(target);
+      if (el) {
+        window.clearInterval(timer);
+        el.scrollIntoView({ behavior: "smooth" });
+      } else if (++attempts > 25) {
+        window.clearInterval(timer);
+      } else {
+        window.scrollBy(0, window.innerHeight);
+      }
+    }, 150);
+    return () => window.clearInterval(timer);
+  }, [hash]);
+
   return (
     <>
       <Navbar />

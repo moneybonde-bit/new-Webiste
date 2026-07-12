@@ -1,9 +1,10 @@
 import React from "react";
 import { motion } from "motion/react";
-import { ExternalLink, Github } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { TiltCard } from "../components/ui/TiltCard";
-import { portfolioProjects } from "../data/portfolio";
+import { portfolioCategories, getItemsByCategory } from "../data/portfolio";
 import { useLocalized } from "../lib/localize";
 import { SectionLabel } from "../components/ui/SectionLabel";
 
@@ -13,8 +14,8 @@ interface Stat {
 }
 
 /**
- * Selected work in an asymmetric editorial grid (the lead project runs
- * full-width) followed by a high-contrast results band.
+ * Portfolio section: three category cards that navigate to their detail
+ * pages (/portfolio/:category), followed by a high-contrast results band.
  */
 export function Portfolio() {
   const { t } = useTranslation();
@@ -37,85 +38,74 @@ export function Portfolio() {
           <p className="text-gray-400 text-lg max-w-sm md:text-right md:pb-2">{t("portfolio.desc")}</p>
         </div>
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
-          {portfolioProjects.map((project, index) => {
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-14">
+          {portfolioCategories.map((category, index) => {
             const isLead = index === 0;
+            const count = getItemsByCategory(category.id).length;
             return (
               <motion.li
-                key={index}
+                key={category.id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: (index % 2) * 0.1 }}
-                className={`group flex flex-col ${isLead ? "md:col-span-2" : ""}`}
+                className={`group ${isLead ? "md:col-span-2" : ""}`}
               >
-                <TiltCard
-                  className={`overflow-hidden glass-card relative shadow-lg shadow-black/50 border border-white/5 group-hover:border-neon-pink/30 mb-6 ${
-                    isLead ? "aspect-[4/3] md:aspect-[21/9]" : "aspect-[4/3]"
-                  }`}
+                <Link
+                  to={`/portfolio/${category.id}`}
+                  className="flex flex-col focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neon-pink rounded-2xl"
+                  aria-label={`${localize(category.title)} — ${t("portfolio.viewCategory")}`}
                 >
-                  <img
-                    src={project.image}
-                    alt={localize(project.title)}
-                    loading="lazy"
-                    decoding="async"
-                    width={isLead ? 1200 : 600}
-                    height={isLead ? 515 : 450}
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" aria-hidden="true" />
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-4 right-5 text-4xl md:text-5xl font-black tracking-tighter text-stroke opacity-70"
+                  <TiltCard
+                    className={`overflow-hidden glass-card relative shadow-lg shadow-black/50 border border-white/5 group-hover:border-neon-pink/30 mb-6 ${
+                      isLead ? "aspect-[4/3] md:aspect-[21/9]" : "aspect-[4/3]"
+                    }`}
                   >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="absolute bottom-4 left-4 text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full bg-black/60 border border-white/10 text-soft-magenta">
-                    {localize(project.category)}
-                  </span>
-                </TiltCard>
-
-                <div className={`flex flex-col ${isLead ? "md:flex-row md:items-end md:justify-between md:gap-12" : ""}`}>
-                  <div className="flex-1">
-                    <h3
-                      className={`font-bold tracking-tight text-white mb-2 group-hover:text-neon-pink transition-colors ${
-                        isLead ? "text-2xl md:text-4xl" : "text-xl md:text-2xl"
-                      }`}
+                    <img
+                      src={category.image}
+                      alt={localize(category.title)}
+                      loading="lazy"
+                      decoding="async"
+                      width={isLead ? 1200 : 600}
+                      height={isLead ? 515 : 450}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" aria-hidden="true" />
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-4 right-5 text-4xl md:text-5xl font-black tracking-tighter text-stroke opacity-70"
                     >
-                      {localize(project.title)}
-                    </h3>
-                    <p className="text-sm md:text-base text-gray-400 leading-relaxed mb-5 max-w-xl">
-                      {localize(project.description)}
-                    </p>
-                  </div>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="absolute bottom-4 left-4 text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-full bg-black/60 border border-white/10 text-soft-magenta">
+                      {category.emoji} {count} {t("portfolio.projectsSuffix")}
+                    </span>
+                  </TiltCard>
 
-                  <div className="flex items-center gap-3 shrink-0 mb-1">
-                    {project.url && (
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${t("portfolio.visit")} — ${localize(project.title)}`}
-                        className="inline-flex items-center gap-2 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:bg-neon-pink hover:border-neon-pink transition-colors"
+                  <div className={`flex flex-col ${isLead ? "md:flex-row md:items-end md:justify-between md:gap-12" : ""}`}>
+                    <div className="flex-1">
+                      <h3
+                        className={`font-bold tracking-tight text-white mb-2 group-hover:text-neon-pink transition-colors ${
+                          isLead ? "text-2xl md:text-4xl" : "text-xl md:text-2xl"
+                        }`}
                       >
-                        <ExternalLink size={14} aria-hidden="true" />
-                        {t("portfolio.visit")}
-                      </a>
-                    )}
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${localize(project.title)} — GitHub repository`}
-                        className="inline-flex items-center gap-2 text-sm font-medium text-gray-300 bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:bg-white/10 hover:text-white transition-colors"
-                      >
-                        <Github size={14} aria-hidden="true" />
-                        GitHub
-                      </a>
-                    )}
+                        {localize(category.title)}
+                      </h3>
+                      <p className="text-sm md:text-base text-gray-400 leading-relaxed mb-5 max-w-xl">
+                        {localize(category.cardDescription)}
+                      </p>
+                    </div>
+
+                    <span className="inline-flex items-center gap-2 self-start shrink-0 mb-1 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-full px-4 py-2 group-hover:bg-neon-pink group-hover:border-neon-pink transition-colors">
+                      {t("portfolio.viewCategory")}
+                      <ArrowUpRight
+                        size={14}
+                        aria-hidden="true"
+                        className="group-hover:rotate-45 transition-transform duration-300"
+                      />
+                    </span>
                   </div>
-                </div>
+                </Link>
               </motion.li>
             );
           })}

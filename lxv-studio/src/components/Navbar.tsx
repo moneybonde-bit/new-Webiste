@@ -2,9 +2,38 @@ import React, { useState, useEffect } from "react";
 import { cn } from "@/src/lib/utils";
 import { Menu, X, Globe } from "lucide-react";
 import { Link } from "react-scroll";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/Button";
 import { useTranslation } from "react-i18next";
 import { Logo } from "./ui/Logo";
+
+interface NavAnchorProps {
+  to: string;
+  className?: string;
+  onClick?: () => void;
+  "aria-label"?: string;
+  children: React.ReactNode;
+}
+
+/**
+ * Section anchor that works from any route: smooth-scrolls on the home page,
+ * navigates to /#section from other pages (HomePage handles the hash).
+ */
+function NavAnchor({ to, className, onClick, children, ...rest }: NavAnchorProps) {
+  const { pathname } = useLocation();
+  if (pathname === "/") {
+    return (
+      <Link to={to} smooth={true} duration={500} className={className} onClick={onClick} {...rest}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <RouterLink to={`/#${to}`} className={className} onClick={onClick} {...rest}>
+      {children}
+    </RouterLink>
+  );
+}
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,29 +62,25 @@ export function Navbar() {
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between relative z-50">
-        <Link
+        <NavAnchor
           to="home"
-          smooth={true}
-          duration={500}
           className="cursor-pointer"
           aria-label="Luxavian Digital Studio — scroll to top"
           onClick={() => setMobileMenuOpen(false)}
         >
           <Logo />
-        </Link>
+        </NavAnchor>
 
         {/* Desktop Nav */}
         <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
+            <NavAnchor
               key={link.name}
               to={link.to}
-              smooth={true}
-              duration={500}
               className="text-sm text-gray-300 hover:text-white cursor-pointer transition-colors"
             >
               {link.name}
-            </Link>
+            </NavAnchor>
           ))}
 
           {/* Language Switcher */}
@@ -87,9 +112,9 @@ export function Navbar() {
             >中文</button>
           </div>
 
-          <Link to="contact" smooth={true} duration={500}>
+          <NavAnchor to="contact">
             <Button size="sm">{t("nav.startProject")}</Button>
-          </Link>
+          </NavAnchor>
         </nav>
 
         {/* Mobile Toggle */}
@@ -139,26 +164,22 @@ export function Navbar() {
               >中文</button>
             </div>
             {navLinks.map((link) => (
-              <Link
+              <NavAnchor
                 key={link.name}
                 to={link.to}
-                smooth={true}
-                duration={500}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-bold text-gray-300 hover:text-white cursor-pointer py-2"
               >
                 {link.name}
-              </Link>
+              </NavAnchor>
             ))}
-            <Link
+            <NavAnchor
               to="contact"
-              smooth={true}
-              duration={500}
               onClick={() => setMobileMenuOpen(false)}
               className="w-full max-w-xs mt-4"
             >
               <Button className="w-full" size="lg">{t("nav.startProject")}</Button>
-            </Link>
+            </NavAnchor>
           </div>
         </div>
       )}

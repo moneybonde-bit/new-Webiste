@@ -12,6 +12,11 @@ import { RequireAdmin, RequireAuth, RequireSuperAdmin } from "./portal/auth/guar
 const ConsultationPage = lazy(() =>
   import("./pages/ConsultationPage").then((m) => ({ default: m.ConsultationPage })),
 );
+const PortfolioCategoryPage = lazy(() =>
+  import("./pages/PortfolioCategoryPage").then((m) => ({
+    default: m.PortfolioCategoryPage,
+  })),
+);
 
 // Portal & CRM are lazy so the marketing site's initial payload stays small.
 const LoginPage = lazy(() =>
@@ -54,6 +59,7 @@ export default function App() {
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/portfolio/:category" element={<PortfolioCategoryPage />} />
               <Route path="/consultation" element={<ConsultationPage />} />
 
               {/* Client portal */}
