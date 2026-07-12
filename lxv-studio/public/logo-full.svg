@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" role="img" aria-label="Luxavian Digital Studio">
+  <defs>
+    <linearGradient id="lxf-grad" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff007f"/>
+      <stop offset="1" stop-color="#b026ff"/>
+    </linearGradient>
+    <filter id="lxf-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="blur"/>
+      <feFlood flood-color="#ff007f" flood-opacity="0.5" result="pink"/>
+      <feComposite in="pink" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Icon (48x48 tile, left) -->
+  <g>
+    <rect x="8" y="8" width="48" height="48" rx="11" fill="#0A0A0A"/>
+    <rect x="8" y="8" width="48" height="48" rx="11" fill="none" stroke="url(#lxf-grad)" stroke-opacity="0.35" stroke-width="1.2"/>
+    <g filter="url(#lxf-glow)" transform="translate(8 8) scale(0.75)">
+      <path d="M16 13h10v28h18v10H16Z" fill="url(#lxf-grad)"/>
+      <path d="M36 14l6 6 6-6 5 5-6 6 6 6-5 5-6-6-6 6-5-5 6-6-6-6Z" fill="url(#lxf-grad)" fill-opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="66" y="33" font-family="Geist, Inter, system-ui, -apple-system, sans-serif" font-size="21" font-weight="800" letter-spacing="-0.5" fill="#ffffff">Luxavian</text>
+  <text x="66.5" y="48" font-family="Geist, Inter, system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="600" letter-spacing="1.7" fill="#a1a1aa">DIGITAL STUDIO</text>
+</svg>

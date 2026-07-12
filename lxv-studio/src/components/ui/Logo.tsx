@@ -8,17 +8,13 @@ interface LogoProps {
 
 export function LogoIcon({ className }: LogoProps) {
   return (
-    <picture>
-      <source srcSet="/logos/luxavian-logo-48.webp" type="image/webp" />
-      <img
-        src="/logos/luxavian-logo-48.png"
-        alt=""
-        aria-hidden="true"
-        width={40}
-        height={40}
-        className={cn("w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,0,127,0.8)]", className)}
-      />
-    </picture>
+    <img
+      src="/logo-mark.svg"
+      alt="Luxavian Logo"
+      width={40}
+      height={40}
+      className={cn("w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,0,127,0.8)]", className)}
+    />
   );
 }
 
