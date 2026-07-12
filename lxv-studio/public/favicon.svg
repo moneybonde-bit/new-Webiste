@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Luxavian favicon">
+  <defs>
+    <linearGradient id="lx-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff007f"/>
+      <stop offset="1" stop-color="#b026ff"/>
+    </linearGradient>
+    <filter id="lx-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.1" result="blur"/>
+      <feFlood flood-color="#ff007f" flood-opacity="0.55" result="pink"/>
+      <feComposite in="pink" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7" fill="#0A0A0A"/>
+
+  <g filter="url(#lx-glow)">
+    <path d="M8 6.5h5v14h9v5H8Z" fill="url(#lx-grad)"/>
+    <path d="M18 7l3 3 3-3 2.5 2.5-3 3 3 3-2.5 2.5-3-3-3 3-2.5-2.5 3-3-3-3Z" fill="url(#lx-grad)" fill-opacity="0.9"/>
+  </g>
+</svg>
