@@ -8,6 +8,7 @@ import { packageDetails } from "../data/pricingDetails";
 import { PricingCard, type PricingPackage } from "../components/pricing/PricingCard";
 import { PackageDetails } from "../components/pricing/PackageDetails";
 import { CompareSidebar } from "../components/pricing/CompareSidebar";
+import { SectionLabel } from "../components/ui/SectionLabel";
 
 export function Pricing() {
   const { t } = useTranslation();
@@ -46,26 +47,29 @@ export function Pricing() {
   const goToConsultation = (id: string) => navigate(`/consultation?package=${id}`);
 
   return (
-    <section id="pricing" className="relative border-y border-white/5 bg-dark/30 py-24">
+    <section id="pricing" className="relative border-y border-white/5 bg-dark/30 py-28 md:py-40">
       <div className="pointer-events-none absolute left-1/4 top-0 -z-10 h-96 w-96 rounded-full bg-neon-pink/10 blur-[120px]" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 -z-10 h-96 w-96 rounded-full bg-neon-purple/10 blur-[120px]" />
 
       <div className="container mx-auto max-w-7xl px-6">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-4 text-3xl font-bold tracking-tight md:text-5xl"
-          >
-            {t("pricing.title")}
-          </motion.h2>
+        <div className="mb-16 flex max-w-7xl flex-col gap-8 md:mb-24 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <SectionLabel index="06" className="mb-8">{t("pricing.title")}</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-[clamp(2.4rem,6vw,5rem)] font-extrabold leading-[1.02] tracking-tighter"
+            >
+              {t("pricing.title")}
+            </motion.h2>
+          </div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-gray-400"
+            className="max-w-sm text-lg text-gray-400 md:pb-2 md:text-right"
           >
             {t("pricing.desc")}
           </motion.p>

@@ -19,6 +19,9 @@ const Pricing = lazy(() =>
 const FAQ = lazy(() =>
   import("../sections/FAQ").then((m) => ({ default: m.FAQ })),
 );
+const FinalCTA = lazy(() =>
+  import("../sections/FinalCTA").then((m) => ({ default: m.FinalCTA })),
+);
 const Contact = lazy(() =>
   import("../sections/Contact").then((m) => ({ default: m.Contact })),
 );
@@ -45,6 +48,7 @@ export function HomePage() {
         <LazySection><Workflow /></LazySection>
         <LazySection><Pricing /></LazySection>
         <LazySection><FAQ /></LazySection>
+        <LazySection><FinalCTA /></LazySection>
         <LazySection><Contact /></LazySection>
       </main>
 

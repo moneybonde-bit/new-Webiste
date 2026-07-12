@@ -18,7 +18,10 @@ const resources = {
         title2: "Grow Smarter.",
         desc: "Website, dashboard, automation, and AI solutions that help businesses and organizations work more efficiently and build greater trust.",
         cta1: "Choose a Service",
-        cta2: "Free Consultation"
+        cta2: "Free Consultation",
+        location: "Central Sulawesi — Indonesia",
+        est: "Digital Studio",
+        scroll: "Scroll to explore"
       },
       about: {
         title1: "Luxavian Digital Studio helps organizations transform ideas into modern digital products.",
@@ -28,6 +31,11 @@ const resources = {
       },
       why: {
         title: "Why Choose Luxavian Studio?",
+        problemLabel: "The Problem",
+        problemTitle: "Most websites look fine — and do nothing.",
+        problemDesc: "Templates that all look the same, slow pages, and layouts that never turn visitors into trust or action.",
+        solutionLabel: "Our Answer",
+        solutionTitle: "We craft digital experiences that earn trust and move people to act.",
         desc: "We are here as a collaborative partner ready to understand your challenges and provide the best digital solutions.",
         reasons: [
           "Affordable pricing",
@@ -166,7 +174,16 @@ const resources = {
       portfolio: {
         title: "Our Work",
         desc: "Real projects we have crafted for our clients.",
-        visit: "Visit Website"
+        visit: "Visit Website",
+        label: "Selected Work"
+      },
+      results: {
+        stats: [
+          { value: "100%", label: "Custom-designed, no templates" },
+          { value: "10+", label: "Sectors served across Indonesia" },
+          { value: "3", label: "Languages, one studio" },
+          { value: "24/7", label: "Fast, human support" }
+        ]
       },
       workflow: {
         title: "How We Work",
@@ -200,6 +217,14 @@ const resources = {
             a: "Absolutely! We communicate in a clear, easy-to-understand way and will guide you through every step of the process."
           }
         ]
+      },
+      finalCta: {
+        label: "One Last Thing",
+        line1: "Have an idea?",
+        line2: "Let's make it real.",
+        desc: "Tell us where you want to go. We'll design the way there.",
+        button: "Start a Project",
+        whatsapp: "Chat on WhatsApp"
       },
       contact: {
         title: "Let's Build Digital Solutions Together.",
@@ -259,7 +284,10 @@ const resources = {
         title2: "Grow Smarter.",
         desc: "Website, dashboard, otomasi, dan solusi AI yang membantu bisnis dan organisasi bekerja lebih efisien dan membangun kepercayaan yang lebih besar.",
         cta1: "Pilih Layanan",
-        cta2: "Konsultasi Gratis"
+        cta2: "Konsultasi Gratis",
+        location: "Sulawesi Tengah — Indonesia",
+        est: "Studio Digital",
+        scroll: "Scroll untuk menjelajah"
       },
       about: {
         title1: "Luxavian Digital Studio membantu organisasi mengubah ide menjadi produk digital modern.",
@@ -269,6 +297,11 @@ const resources = {
       },
       why: {
         title: "Mengapa Memilih Luxavian Studio?",
+        problemLabel: "Masalahnya",
+        problemTitle: "Kebanyakan website terlihat bagus — tapi tidak menghasilkan apa-apa.",
+        problemDesc: "Template yang serba mirip, halaman yang lambat, dan tata letak yang tidak pernah mengubah pengunjung menjadi kepercayaan atau tindakan.",
+        solutionLabel: "Jawaban Kami",
+        solutionTitle: "Kami merancang pengalaman digital yang membangun kepercayaan dan mendorong orang untuk bertindak.",
         desc: "Kami hadir sebagai mitra kolaboratif yang siap memahami tantangan Anda dan memberikan solusi digital terbaik.",
         reasons: [
           "Harga terjangkau",
@@ -407,7 +440,16 @@ const resources = {
       portfolio: {
         title: "Portofolio",
         desc: "Proyek nyata yang telah kami kerjakan untuk klien kami.",
-        visit: "Kunjungi Website"
+        visit: "Kunjungi Website",
+        label: "Karya Pilihan"
+      },
+      results: {
+        stats: [
+          { value: "100%", label: "Desain kustom, tanpa template" },
+          { value: "10+", label: "Sektor terlayani di Indonesia" },
+          { value: "3", label: "Bahasa, satu studio" },
+          { value: "24/7", label: "Dukungan cepat dan responsif" }
+        ]
       },
       workflow: {
         title: "Cara Kami Bekerja",
@@ -441,6 +483,14 @@ const resources = {
             a: "Tentu! Kami berkomunikasi dengan bahasa yang mudah dipahami dan akan mendampingi Anda di setiap tahap proses."
           }
         ]
+      },
+      finalCta: {
+        label: "Satu Hal Lagi",
+        line1: "Punya ide?",
+        line2: "Mari kita wujudkan.",
+        desc: "Ceritakan tujuan Anda. Kami rancang jalan menuju ke sana.",
+        button: "Mulai Proyek",
+        whatsapp: "Chat via WhatsApp"
       },
       contact: {
         title: "Mari Bangun Solusi Digital Bersama.",
@@ -500,7 +550,10 @@ const resources = {
         title2: "Grow Smarter.",
         desc: "帮助企业和组织更高效工作并建立更大信任的网站、仪表板、自动化和人工智能解决方案。",
         cta1: "选择服务",
-        cta2: "免费咨询"
+        cta2: "免费咨询",
+        location: "中苏拉威西 — 印度尼西亚",
+        est: "数字工作室",
+        scroll: "滚动探索"
       },
       about: {
         title1: "Luxavian Digital Studio 帮助组织将创意转化为现代数字产品。",
@@ -510,6 +563,11 @@ const resources = {
       },
       why: {
         title: "为什么选择 Luxavian Studio？",
+        problemLabel: "问题所在",
+        problemTitle: "大多数网站看起来不错——却毫无作用。",
+        problemDesc: "千篇一律的模板、缓慢的页面，以及无法将访客转化为信任与行动的布局。",
+        solutionLabel: "我们的答案",
+        solutionTitle: "我们打造能够赢得信任、促使人们行动的数字体验。",
         desc: "我们作为协作合作伙伴，随时准备了解您的挑战并提供最佳的数字解决方案。",
         reasons: [
           "价格实惠",
@@ -648,7 +706,16 @@ const resources = {
       portfolio: {
         title: "我们的作品",
         desc: "我们为客户打造的真实项目。",
-        visit: "访问网站"
+        visit: "访问网站",
+        label: "精选作品"
+      },
+      results: {
+        stats: [
+          { value: "100%", label: "定制设计，绝无模板" },
+          { value: "10+", label: "服务印尼多个行业" },
+          { value: "3", label: "三种语言，一个工作室" },
+          { value: "24/7", label: "快速贴心的支持" }
+        ]
       },
       workflow: {
         title: "我们的工作方式",
@@ -682,6 +749,14 @@ const resources = {
             a: "当然！我们以清晰易懂的方式沟通，并会指导您完成每一步。"
           }
         ]
+      },
+      finalCta: {
+        label: "最后一件事",
+        line1: "有想法？",
+        line2: "让我们一起实现。",
+        desc: "告诉我们您想去的方向，我们为您设计通往那里的路。",
+        button: "开始项目",
+        whatsapp: "WhatsApp 联系"
       },
       contact: {
         title: "让我们一起构建数字解决方案。",
